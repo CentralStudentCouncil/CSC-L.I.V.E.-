@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - School Sports System</title>
+
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" 
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --secondary-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-button.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+        }
+
+        .mobile-scroll {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            table-layout: auto;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .leaderboard-rank-cell { width: 12%; }
+        .leaderboard-team-cell { width: 40%; }
+        .leaderboard-stat-cell { width: 16%; }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 640px) {
+            .leaderboard-table {
+                table-layout: fixed;
+                min-width: 600px;
+            }
+
+            .mobile-table-container {
+                overflow-x: auto;
+                border-radius: 0.75rem;
+                box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            }
+
+            .dashboard-tabs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-card-value {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 border-b border-yellow-700 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 min-w-0">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white p-0.5 shadow-inner flex-shrink-0">
+                        <img
+                            src="Adventist_University_of_the_Philippines_logo.png"
+                            alt="School Logo"
+                            class="w-full h-full object-contain rounded-full">
+                    </div>
+
+                    <div class="truncate">
+                        <h1 class="font-extrabold text-gray-900 text-sm sm:text-lg leading-tight tracking-tight">AUP- Central Student Council</h1>
+                        <p class="text-[10px] sm:text-xs font-semibold text-gray-800 uppercase tracking-widest opacity-80">Student Dashboard</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <!-- Tab Navigation -->
+        <div class="dashboard-tabs grid w-full grid-cols-2 mb-8 bg-white p-1.5 shadow-sm rounded-2xl border border-slate-200">
+            <button
+                type="button"
+                onclick="switchTab('leaderboard', this)"
+                class="tab-button active flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-200">
+                <span class="tab-icon text-lg">🏆</span>
+                <span class="tab-label">Leaderboard</span>
+            </button>
+
+            <button
+                type="button"
+                onclick="switchTab('schedule', this)"
+                class="tab-button flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold text-sm sm:text-base transition-all duration-200">
+                <span class="tab-icon text-lg">📅</span>
+                <span class="tab-label">Game Schedule</span>
+            </button>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div id="leaderboard" class="tab-content space-y-8 animate-in fade-in duration-500">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div class="space-y-1">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Team Leaderboard</h2>
+                    <p class="text-slate-500 font-medium">
+                        CSC L.I.V.E. - League Information & Viewing Engine
+                    </p>
+
+                    <p id="leaderboardRealtimeStatus" class="text-xs font-semibold text-emerald-600 mt-2">
+                        Live leaderboard sync is starting...
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="refreshLeaderboard"
+                    class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh Data
+                </button>
+            </div>
+
+            <!-- Leaderboard Table -->
+            <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
+                <div class="mobile-table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-slate-800 to-slate-900 text-white">
+                                <th class="leaderboard-rank-cell text-left py-5 px-6 font-bold uppercase text-xs tracking-wider">Rank</th>
+                                <th class="leaderboard-team-cell text-left py-5 px-6 font-bold uppercase text-xs tracking-wider">Team Name</th>
+                                <th class="leaderboard-stat-cell text-center py-5 px-6 font-bold uppercase text-xs tracking-wider">Points</th>
+                                <th class="leaderboard-stat-cell text-center py-5 px-6 font-bold uppercase text-xs tracking-wider">Wins</th>
+                                <th class="leaderboard-stat-cell text-center py-5 px-6 font-bold uppercase text-xs tracking-wider">Losses</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="studentLeaderboardBody" class="divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="5" class="text-center py-16">
+                                    <div class="flex flex-col items-center space-y-3">
+                                        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                        <p class="text-slate-500 font-medium">Loading leaderboard data...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stats-card card-hover p-6 bg-white rounded-2xl border border-slate-200 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <p class="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">Total Teams</p>
+                        <p id="studentTotalTeams" class="stats-card-value text-4xl font-black text-blue-600">...</p>
+                        <div class="mt-4 flex items-center text-xs font-semibold text-blue-700 bg-blue-50 w-fit px-2 py-1 rounded-md">
+                            Active Competition
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card card-hover p-6 bg-white rounded-2xl border border-slate-200 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <p class="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">Total Matches</p>
+                        <p id="studentTotalMatches" class="stats-card-value text-4xl font-black text-amber-600">...</p>
+                        <div class="mt-4 flex items-center text-xs font-semibold text-amber-700 bg-amber-50 w-fit px-2 py-1 rounded-md">
+                            Season Schedule
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card card-hover p-6 bg-white rounded-2xl border border-slate-200 relative overflow-hidden group sm:col-span-2 lg:col-span-1">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                    <div class="relative">
+                        <p class="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">Participants</p>
+                        <p id="studentTotalParticipants" class="stats-card-value text-4xl font-black text-emerald-600">...</p>
+                        <div class="mt-4 flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 w-fit px-2 py-1 rounded-md">
+                            Registered Athletes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Schedule & Status Tab -->
+        <div id="schedule" class="tab-content hidden space-y-8 animate-in fade-in duration-500">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div class="space-y-1">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Game Schedule</h2>
+                    <p class="text-slate-500 font-medium">Stay updated with live and upcoming matches</p>
+                </div>
+
+                <button
+                    type="button"
+                    id="refreshMatches"
+                    class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Refresh Matches
+                </button>
+            </div>
+
+            <!-- Schedule Filters -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div>
+                        <p id="scheduleFilterSummary" class="text-sm font-bold text-slate-700">
+                            Showing all matches for all sports.
+                        </p>
+                        <p id="scheduleRealtimeStatus" class="text-xs font-semibold text-emerald-600 mt-1">
+                            Live updates are starting...
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <label for="gameCategoryFilter" class="text-xs font-black uppercase tracking-widest text-slate-500 whitespace-nowrap">
+                            Game Category
+                        </label>
+
+                        <select
+                            id="gameCategoryFilter"
+                            class="w-full sm:w-64 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                            <option value="All">All Registered Sports</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 overflow-x-auto mobile-scroll pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+                    <button
+                        type="button"
+                        data-schedule-filter="All"
+                        class="schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-blue-600 text-white shadow-md shadow-blue-100">
+                        All Games
+                    </button>
+
+                    <button
+                        type="button"
+                        data-schedule-filter="Next"
+                        class="schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-white border border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600">
+                        Upcoming
+                    </button>
+
+                    <button
+                        type="button"
+                        data-schedule-filter="Ongoing"
+                        class="schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-white border border-slate-200 text-slate-600 hover:border-red-400 hover:text-red-600">
+                        Ongoing
+                    </button>
+
+                    <button
+                        type="button"
+                        data-schedule-filter="Done"
+                        class="schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-white border border-slate-200 text-slate-600 hover:border-emerald-400 hover:text-emerald-600">
+                        Completed
+                    </button>
+                </div>
+            </div>
+
+            <!-- Matches Grid -->
+            <div id="studentMatchesGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200">
+                    <div class="flex flex-col items-center space-y-3">
+                        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-slate-500 font-medium">Loading match schedule...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Match Details Modal -->
+    <div
+        id="matchDetailsModal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4 transition-all duration-300">
+
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col transform transition-all scale-100">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-6 flex items-center justify-between">
+                <h2 id="matchDetailsTitle" class="text-xl font-bold text-white tracking-tight">
+                    Match Details
+                </h2>
+                <button
+                    type="button"
+                    id="closeMatchDetailsModal"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors text-2xl leading-none">
+                    ×
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div id="matchDetailsContent" class="p-6 sm:p-8 overflow-y-auto max-h-[75vh]">
+                <div class="text-center py-10 text-slate-400">
+                    <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p>Loading details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-20 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center space-x-3">
+                    <img src="Adventist_University_of_the_Philippines_logo.png" alt="Logo" class="w-8 h-8 opacity-50 grayscale">
+                    <span class="font-bold text-slate-200">AUP-CSC L.I.V.E</span>
+                </div>
+                <p class="text-sm">© 2026 Adventist University of the Philippines - Central Student Council.</p>
+                <div class="flex space-x-6 text-xs uppercase tracking-widest font-bold">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                    <a href="#" class="hover:text-white transition-colors">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function checkAuth() {
+            // Placeholder for auth check if needed
+        }
+
+        function switchTab(tabName, buttonElement) {
+            document.querySelectorAll(".tab-content").forEach(tab => {
+                tab.classList.add("hidden");
+            });
+
+            document.querySelectorAll(".tab-button").forEach(button => {
+                button.className = "tab-button flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold text-sm sm:text-base transition-all duration-200";
+            });
+
+            document.getElementById(tabName).classList.remove("hidden");
+
+            if (buttonElement) {
+                buttonElement.className = "tab-button active flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-200";
+            }
+        }
+
+        checkAuth();
+    </script>
+
+    <!-- Supabase Student Dashboard Script -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            const SUPABASE_URL = "https://unveyndaaznxgqojwjki.supabase.co";
+            const REAL_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVudmV5bmRhYXpueGdxb2p3amtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzQyNzUsImV4cCI6MjA5NDIxMDI3NX0.2RUriqqq9kITnl8uPZSdiSrXuo8BhD9nrzqHFUwl2yU";
+
+            const supabase = createClient(SUPABASE_URL, REAL_SUPABASE_ANON_KEY);
+
+            const TEAMS_TABLE = "sports_leaderboard";
+            const PARTICIPANTS_TABLE = "participants";
+            const MATCHES_TABLE = "scheduled_matches";
+            const GAME_HISTORY_TABLE = "game_history";
+            const SPORTS_TABLE = "sports";
+
+            const studentLeaderboardBody = document.getElementById("studentLeaderboardBody");
+            const leaderboardRealtimeStatus = document.getElementById("leaderboardRealtimeStatus");
+            const studentTotalTeams = document.getElementById("studentTotalTeams");
+            const studentTotalMatches = document.getElementById("studentTotalMatches");
+            const studentTotalParticipants = document.getElementById("studentTotalParticipants");
+
+            const refreshLeaderboard = document.getElementById("refreshLeaderboard");
+            const refreshMatches = document.getElementById("refreshMatches");
+            const studentMatchesGrid = document.getElementById("studentMatchesGrid");
+            const gameCategoryFilter = document.getElementById("gameCategoryFilter");
+            const scheduleFilterSummary = document.getElementById("scheduleFilterSummary");
+            const scheduleRealtimeStatus = document.getElementById("scheduleRealtimeStatus");
+
+            const matchDetailsModal = document.getElementById("matchDetailsModal");
+            const closeMatchDetailsModal = document.getElementById("closeMatchDetailsModal");
+            const matchDetailsTitle = document.getElementById("matchDetailsTitle");
+            const matchDetailsContent = document.getElementById("matchDetailsContent");
+
+            let activeScheduleFilter = "All";
+            let activeSportCategoryFilter = "All";
+            let studentMatchesData = [];
+            let registeredSports = [];
+            let matchReloadTimer = null;
+            let leaderboardReloadTimer = null;
+            let isLoadingMatches = false;
+            let isLoadingLeaderboard = false;
+            let lastLeaderboardRows = [];
+            let lastLeaderboardHistoryRows = [];
+
+            function escapeHTML(value) {
+                return String(value ?? "")
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;")
+                    .replaceAll('"', "&quot;")
+                    .replaceAll("'", "&#039;");
+            }
+
+            function formatDateTime(dateValue) {
+                if (!dateValue) return "-";
+                const parsed = new Date(dateValue);
+                if (Number.isNaN(parsed.getTime())) return "-";
+                return parsed.toLocaleString([], {
+                    dateStyle: "medium",
+                    timeStyle: "short"
+                });
+            }
+
+            function clampTimerSeconds(value) {
+                const seconds = Number(value);
+                return Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0;
+            }
+
+            function formatTimerDisplay(totalSeconds) {
+                const safeSeconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+                const minutes = Math.floor(safeSeconds / 60);
+                const seconds = safeSeconds % 60;
+                return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+            }
+
+            function calculateRemainingSeconds(match) {
+                const duration = clampTimerSeconds(match.timer_duration_seconds) || 600;
+                if (!match.timer_enabled || !match.timer_started_at) return duration;
+                const startedAt = new Date(match.timer_started_at).getTime();
+                if (Number.isNaN(startedAt)) return duration;
+                const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+                return Math.max(duration - elapsed, 0);
+            }
+
+            function getTeamName(match, teamSide) {
+                if (teamSide === "one") {
+                    return match.team_one?.team || match.team_one_name || "Unknown Team";
+                }
+                return match.team_two?.team || match.team_two_name || "Unknown Team";
+            }
+
+            function getSportName(match) {
+                return match.sport?.sport_name || match.sport_name || "Unknown Sport";
+            }
+
+            function setRealtimeStatus(message, tone = "success") {
+                if (!scheduleRealtimeStatus) return;
+
+                const toneClass = tone === "error"
+                    ? "text-red-600"
+                    : tone === "warning"
+                        ? "text-amber-600"
+                        : "text-emerald-600";
+
+                scheduleRealtimeStatus.className = `text-xs font-semibold ${toneClass}`;
+                scheduleRealtimeStatus.textContent = message;
+            }
+
+            function setLeaderboardStatus(message, tone = "success") {
+                if (!leaderboardRealtimeStatus) return;
+
+                const toneClass = tone === "error"
+                    ? "text-red-600"
+                    : tone === "warning"
+                        ? "text-amber-600"
+                        : "text-emerald-600";
+
+                leaderboardRealtimeStatus.className = `text-xs font-semibold ${toneClass} mt-2`;
+                leaderboardRealtimeStatus.textContent = message;
+            }
+
+            function getSelectedSportName() {
+                if (activeSportCategoryFilter === "All") {
+                    return "all sports";
+                }
+
+                const selectedSport = registeredSports.find(sport => String(sport.id) === String(activeSportCategoryFilter));
+                return selectedSport?.sport_name || "selected sport";
+            }
+
+            function updateScheduleFilterSummary(visibleCount = null) {
+                if (!scheduleFilterSummary) return;
+
+                const statusLabel = activeScheduleFilter === "All"
+                    ? "all game statuses"
+                    : activeScheduleFilter === "Next"
+                        ? "upcoming games"
+                        : activeScheduleFilter === "Ongoing"
+                            ? "ongoing games"
+                            : "completed games";
+
+                const sportLabel = getSelectedSportName();
+                const countText = Number.isFinite(Number(visibleCount)) ? `${visibleCount} match${Number(visibleCount) === 1 ? "" : "es"}` : "matches";
+                scheduleFilterSummary.textContent = `Showing ${countText} for ${statusLabel} in ${sportLabel}.`;
+            }
+
+            function scheduleLiveMatchReload(delay = 250) {
+                window.clearTimeout(matchReloadTimer);
+
+                matchReloadTimer = window.setTimeout(async () => {
+                    await Promise.all([
+                        loadStats(),
+                        loadMatches({ showLoading: false })
+                    ]);
+                }, delay);
+            }
+
+            function scheduleLiveLeaderboardReload(delay = 250) {
+                window.clearTimeout(leaderboardReloadTimer);
+
+                leaderboardReloadTimer = window.setTimeout(async () => {
+                    await Promise.all([
+                        loadStats(),
+                        loadLeaderboard({ showLoading: false })
+                    ]);
+                }, delay);
+            }
+
+            async function loadSportCategoryFilterOptions() {
+                const { data, error } = await supabase
+                    .from(SPORTS_TABLE)
+                    .select("id, sport_name")
+                    .order("sport_name", { ascending: true });
+
+                if (error) {
+                    console.error("Error loading sport category filters:", error.message || error);
+                    setRealtimeStatus("Live updates are active, but sport category filters could not be refreshed.", "warning");
+                    return;
+                }
+
+                registeredSports = data || [];
+
+                if (!gameCategoryFilter) return;
+
+                const previousValue = activeSportCategoryFilter || "All";
+                gameCategoryFilter.innerHTML = `<option value="All">All Sports</option>`;
+
+                registeredSports.forEach(sport => {
+                    const option = document.createElement("option");
+                    option.value = sport.id;
+                    option.textContent = sport.sport_name || "Unnamed Sport";
+                    gameCategoryFilter.appendChild(option);
+                });
+
+                const stillExists = previousValue === "All" || registeredSports.some(sport => String(sport.id) === String(previousValue));
+                activeSportCategoryFilter = stillExists ? previousValue : "All";
+                gameCategoryFilter.value = activeSportCategoryFilter;
+                updateScheduleFilterSummary();
+            }
+
+            function getStatusMeta(status) {
+                if (status === "Done") {
+                    return {
+                        label: "Completed",
+                        badge: "bg-emerald-100 text-emerald-700 border-emerald-200",
+                        border: "border-emerald-100",
+                        heading: "Completed Match",
+                        icon: "✅"
+                    };
+                }
+                if (status === "Ongoing") {
+                    return {
+                        label: "Ongoing",
+                        badge: "bg-red-100 text-red-700 border-red-200 animate-pulse",
+                        border: "border-red-100",
+                        heading: "Ongoing Match",
+                        icon: "🔴"
+                    };
+                }
+                return {
+                    label: "Upcoming",
+                    badge: "bg-blue-100 text-blue-700 border-blue-200",
+                    border: "border-blue-100",
+                    heading: "Upcoming Match",
+                    icon: "🕒"
+                };
+            }
+
+            function updateCountdownDisplays() {
+                document.querySelectorAll(".student-match-countdown").forEach(display => {
+                    const duration = clampTimerSeconds(display.dataset.durationSeconds) || 600;
+                    const isEnabled = display.dataset.timerEnabled === "true";
+                    const startedAt = display.dataset.startedAt;
+
+                    let remaining = duration;
+                    if (isEnabled && startedAt) {
+                        const startedAtMs = new Date(startedAt).getTime();
+                        if (!Number.isNaN(startedAtMs)) {
+                            const elapsed = Math.floor((Date.now() - startedAtMs) / 1000);
+                            remaining = Math.max(duration - elapsed, 0);
+                        }
+                    }
+
+                    display.textContent = formatTimerDisplay(remaining);
+                    if (isEnabled && remaining <= 0) {
+                        display.classList.add("text-red-600");
+                    } else {
+                        display.classList.remove("text-red-600");
+                    }
+                });
+            }
+
+            async function countRows(tableName) {
+                const { count, error } = await supabase
+                    .from(tableName)
+                    .select("*", { count: "exact", head: true });
+                if (error) {
+                    console.error(`Error counting ${tableName}:`, error.message || error);
+                    return 0;
+                }
+                return count || 0;
+            }
+
+            async function loadStats() {
+                const [totalTeams, totalMatches, totalParticipants] = await Promise.all([
+                    countRows(TEAMS_TABLE),
+                    countRows(MATCHES_TABLE),
+                    countRows(PARTICIPANTS_TABLE)
+                ]);
+                studentTotalTeams.textContent = totalTeams;
+                studentTotalMatches.textContent = totalMatches;
+                studentTotalParticipants.textContent = totalParticipants;
+            }
+
+            async function loadLeaderboard(options = {}) {
+                if (isLoadingLeaderboard) {
+                    return;
+                }
+
+                const { showLoading = false } = options;
+                isLoadingLeaderboard = true;
+
+                const shouldShowLoading = showLoading || lastLeaderboardRows.length === 0;
+
+                if (shouldShowLoading) {
+                    studentLeaderboardBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-16">
+                                <div class="flex flex-col items-center space-y-3">
+                                    <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <p class="text-slate-500 font-medium">Updating leaderboard...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                setLeaderboardStatus("Syncing latest leaderboard data...");
+
+                try {
+                    const { data: teams, error: teamsError } = await supabase
+                        .from(TEAMS_TABLE)
+                        .select("*")
+                        .order("team", { ascending: true });
+
+                    if (teamsError) {
+                        console.error("Leaderboard teams error:", teamsError.message || teamsError);
+
+                        if (lastLeaderboardRows.length > 0) {
+                            renderLeaderboardRows(lastLeaderboardRows, lastLeaderboardHistoryRows);
+                            setLeaderboardStatus("Could not refresh teams. Showing last loaded leaderboard.", "warning");
+                        } else {
+                            studentLeaderboardBody.innerHTML = `
+                                <tr>
+                                    <td colspan="5" class="text-center py-16 text-red-500 font-bold">
+                                        Failed to load teams. Please check Supabase RLS and the sports_leaderboard table.
+                                    </td>
+                                </tr>
+                            `;
+                            setLeaderboardStatus("Leaderboard failed to load teams.", "error");
+                        }
+
+                        return;
+                    }
+
+                    const { data: historyRows, error: historyError } = await supabase
+                        .from(GAME_HISTORY_TABLE)
+                        .select("*");
+
+                    if (historyError) {
+                        console.warn("Leaderboard game history warning:", historyError.message || historyError);
+                    }
+
+                    const { data: sportsRows, error: sportsError } = await supabase
+                        .from(SPORTS_TABLE)
+                        .select("*");
+
+                    if (sportsError) {
+                        console.warn("Leaderboard sports points warning:", sportsError.message || sportsError);
+                    }
+
+                    const leaderboardRows = buildLeaderboardRows(teams || [], historyError ? [] : (historyRows || []), sportsRows || []);
+                    lastLeaderboardRows = leaderboardRows;
+                    lastLeaderboardHistoryRows = historyError ? [] : (historyRows || []);
+
+                    renderLeaderboardRows(leaderboardRows, lastLeaderboardHistoryRows);
+
+                    const syncTime = new Date().toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit"
+                    });
+
+                    if (historyError) {
+                        setLeaderboardStatus(`Live sync active. Game history could not be read, so stored team values/zeroes are shown. Last synced ${syncTime}.`, "warning");
+                    } else {
+                        setLeaderboardStatus(`Live leaderboard connected. Last synced ${syncTime}.`);
+                    }
+                } catch (error) {
+                    console.error("Leaderboard load error:", error.message || error);
+
+                    if (lastLeaderboardRows.length > 0) {
+                        renderLeaderboardRows(lastLeaderboardRows, lastLeaderboardHistoryRows);
+                        setLeaderboardStatus("Leaderboard refresh failed. Showing last loaded values.", "warning");
+                    } else {
+                        studentLeaderboardBody.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="text-center py-16 text-red-500 font-bold">
+                                    Failed to load leaderboard. Please check your Supabase tables and policies.
+                                </td>
+                            </tr>
+                        `;
+                        setLeaderboardStatus("Leaderboard failed to load.", "error");
+                    }
+                } finally {
+                    isLoadingLeaderboard = false;
+                }
+            }
+
+            function buildLeaderboardRows(teams, historyRows, sportsRows) {
+                const teamStats = new Map();
+                const sportsById = new Map();
+                const sportsByName = new Map();
+
+                (sportsRows || []).forEach(sport => {
+                    if (sport.id !== undefined && sport.id !== null) {
+                        sportsById.set(String(sport.id), sport);
+                    }
+
+                    const sportName = normalizeText(sport.sport_name || sport.name || sport.game_name);
+                    if (sportName) {
+                        sportsByName.set(sportName, sport);
+                    }
+                });
+
+                function makeTeamKey(teamId, teamName) {
+                    if (teamId !== null && teamId !== undefined && teamId !== "") {
+                        return `id:${teamId}`;
+                    }
+
+                    return `name:${normalizeText(teamName || "Unknown Team")}`;
+                }
+
+                function addTeam(teamId, teamName, baseValues = {}) {
+                    const safeTeamName = teamName || baseValues.team || baseValues.name || "Unknown Team";
+                    const key = makeTeamKey(teamId, safeTeamName);
+
+                    if (!teamStats.has(key)) {
+                        teamStats.set(key, {
+                            id: teamId || baseValues.id || null,
+                            team: safeTeamName,
+                            points: getFirstFiniteNumber(baseValues.points, baseValues.total_points, baseValues.score, 0),
+                            wins: getFirstFiniteNumber(baseValues.wins, baseValues.win, baseValues.total_wins, 0),
+                            losses: getFirstFiniteNumber(baseValues.losses, baseValues.loss, baseValues.total_losses, 0)
+                        });
+                    }
+
+                    return teamStats.get(key);
+                }
+
+                (teams || []).forEach(team => {
+                    addTeam(team.id, team.team || team.team_name || team.name, team);
+                });
+
+                (historyRows || []).forEach(history => {
+                    const winnerId = getFirstValue(
+                        history.winner_team_id,
+                        history.winning_team_id,
+                        history.winner_id,
+                        history.team_winner_id
+                    );
+
+                    const winnerName = getFirstValue(
+                        history.winner_team_name,
+                        history.winning_team_name,
+                        history.winner_name,
+                        history.winner
+                    );
+
+                    const loserId = getFirstValue(
+                        history.loser_team_id,
+                        history.losing_team_id,
+                        history.loser_id,
+                        history.team_loser_id
+                    );
+
+                    const loserName = getFirstValue(
+                        history.loser_team_name,
+                        history.losing_team_name,
+                        history.loser_name,
+                        history.loser
+                    );
+
+                    if (winnerId || winnerName) {
+                        const winner = addTeam(winnerId, winnerName);
+                        winner.points += resolveHistoryPoints(history, "winner", sportsById, sportsByName);
+                        winner.wins += 1;
+                    }
+
+                    if (loserId || loserName) {
+                        const loser = addTeam(loserId, loserName);
+                        loser.points += resolveHistoryPoints(history, "loser", sportsById, sportsByName);
+                        loser.losses += 1;
+                    }
+                });
+
+                return Array.from(teamStats.values()).sort((a, b) => {
+                    if (b.points !== a.points) return b.points - a.points;
+                    if (b.wins !== a.wins) return b.wins - a.wins;
+                    if (a.losses !== b.losses) return a.losses - b.losses;
+                    return String(a.team).localeCompare(String(b.team));
+                });
+            }
+
+            function normalizeText(value) {
+                return String(value ?? "").trim().toLowerCase();
+            }
+
+            function getFirstValue(...values) {
+                for (const value of values) {
+                    if (value !== null && value !== undefined && value !== "") {
+                        return value;
+                    }
+                }
+
+                return null;
+            }
+
+            function getFirstFiniteNumber(...values) {
+                for (const value of values) {
+                    const numericValue = Number(value);
+
+                    if (Number.isFinite(numericValue)) {
+                        return numericValue;
+                    }
+                }
+
+                return 0;
+            }
+
+            function findFiniteNumber(...values) {
+                for (const value of values) {
+                    if (value === null || value === undefined || value === "") {
+                        continue;
+                    }
+
+                    const numericValue = Number(value);
+
+                    if (Number.isFinite(numericValue)) {
+                        return {
+                            found: true,
+                            value: numericValue
+                        };
+                    }
+                }
+
+                return {
+                    found: false,
+                    value: 0
+                };
+            }
+
+            function resolveHistoryPoints(history, side, sportsById, sportsByName) {
+                const explicitWinnerPoints = findFiniteNumber(
+                    history.winner_points_awarded,
+                    history.winner_award,
+                    history.winner_points,
+                    history.points_winner,
+                    history.winning_points
+                );
+
+                const explicitLoserPoints = findFiniteNumber(
+                    history.loser_points_awarded,
+                    history.loser_award,
+                    history.loser_points,
+                    history.points_loser,
+                    history.losing_points
+                );
+
+                if (side === "winner" && explicitWinnerPoints.found) {
+                    return explicitWinnerPoints.value;
+                }
+
+                if (side === "loser" && explicitLoserPoints.found) {
+                    return explicitLoserPoints.value;
+                }
+
+                const sport = findSportForHistory(history, sportsById, sportsByName);
+
+                if (sport) {
+                    if (side === "winner") {
+                        return getFirstFiniteNumber(
+                            sport.winner_points,
+                            sport.points_per_game,
+                            sport.default_winner_points,
+                            1
+                        );
+                    }
+
+                    return getFirstFiniteNumber(
+                        sport.loser_points,
+                        sport.default_loser_points,
+                        0
+                    );
+                }
+
+                return side === "winner" ? 1 : 0;
+            }
+
+            function findSportForHistory(history, sportsById, sportsByName) {
+                const sportId = getFirstValue(history.sport_id, history.game_id, history.category_id);
+
+                if (sportId !== null && sportsById.has(String(sportId))) {
+                    return sportsById.get(String(sportId));
+                }
+
+                const sportName = normalizeText(getFirstValue(
+                    history.sport_name,
+                    history.game_name,
+                    history.category_name,
+                    history.sport
+                ));
+
+                if (sportName && sportsByName.has(sportName)) {
+                    return sportsByName.get(sportName);
+                }
+
+                return null;
+            }
+
+            function renderLeaderboardRows(leaderboardRows, historyRows) {
+                if (!leaderboardRows || leaderboardRows.length === 0) {
+                    studentLeaderboardBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-16 text-slate-500">
+                                No leaderboard data available yet.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                studentLeaderboardBody.innerHTML = "";
+
+                leaderboardRows.forEach((team, index) => {
+                    let medal = "";
+                    let rowClass = "hover:bg-slate-50 transition-colors";
+
+                    if (index === 0) medal = "🥇";
+                    else if (index === 1) medal = "🥈";
+                    else if (index === 2) medal = "🥉";
+
+                    const row = document.createElement("tr");
+                    row.className = `cursor-pointer ${rowClass}`;
+                    row.innerHTML = `
+                        <td class="py-5 px-6">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-lg font-black text-slate-400 w-6">${index + 1}</span>
+                                <span class="text-2xl">${medal}</span>
+                            </div>
+                        </td>
+                        <td class="py-5 px-6">
+                            <span class="font-bold text-slate-900">${escapeHTML(team.team)}</span>
+                        </td>
+                        <td class="py-5 px-6 text-center">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-black text-sm">
+                                ${Number(team.points || 0).toLocaleString()}
+                            </span>
+                        </td>
+                        <td class="py-5 px-6 text-center font-bold text-emerald-600">${Number(team.wins || 0)}</td>
+                        <td class="py-5 px-6 text-center font-bold text-red-500">${Number(team.losses || 0)}</td>
+                    `;
+
+                    row.onclick = () => openTeamDetails(team, historyRows || []);
+                    studentLeaderboardBody.appendChild(row);
+                });
+            }
+
+            function openTeamDetails(team, historyRows) {
+                const teamId = team.id;
+                const teamName = team.team;
+                const normalizeTeamName = (n) => String(n || "").trim().toLowerCase();
+                const selectedName = normalizeTeamName(teamName);
+
+                const teamHistory = (historyRows || []).filter(h => 
+                    (h.winner_team_id && Number(h.winner_team_id) === Number(teamId)) ||
+                    (h.loser_team_id && Number(h.loser_team_id) === Number(teamId)) ||
+                    normalizeTeamName(h.winner_team_name) === selectedName ||
+                    normalizeTeamName(h.loser_team_name) === selectedName
+                );
+
+                const sortedHistory = teamHistory.sort((a, b) => new Date(b.declared_at || b.created_at) - new Date(a.declared_at || a.created_at));
+
+                matchDetailsModal.classList.remove("hidden");
+                matchDetailsModal.classList.add("flex");
+                matchDetailsTitle.textContent = `${teamName} - Performance History`;
+
+                matchDetailsContent.innerHTML = `
+                    <div class="space-y-8">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
+                                <p class="text-[10px] uppercase font-bold text-blue-600 mb-1">Total Points</p>
+                                <p class="text-2xl font-black text-blue-900">${team.points}</p>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 text-center">
+                                <p class="text-[10px] uppercase font-bold text-emerald-600 mb-1">Wins</p>
+                                <p class="text-2xl font-black text-emerald-900">${team.wins}</p>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-2xl border border-red-100 text-center">
+                                <p class="text-[10px] uppercase font-bold text-red-600 mb-1">Losses</p>
+                                <p class="text-2xl font-black text-red-900">${team.losses}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-900 flex items-center">
+                                <span class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center mr-2 text-sm">📜</span>
+                                Recent Match History
+                            </h3>
+                            ${sortedHistory.length === 0 ? '<p class="text-center py-8 text-slate-400 italic">No match history found.</p>' : 
+                                sortedHistory.map(game => {
+                                    const isWin = (game.winner_team_id && Number(game.winner_team_id) === Number(teamId)) || normalizeTeamName(game.winner_team_name) === selectedName;
+                                    const opponent = isWin ? game.loser_team_name : game.winner_team_name;
+                                    const pts = isWin ? (game.winner_points_awarded || game.winner_award || game.winner_points || 0) : (game.loser_points_awarded || game.loser_award || game.loser_points || 0);
+                                    
+                                    return `
+                                        <div class="p-5 rounded-2xl border ${isWin ? 'border-emerald-100 bg-emerald-50/30' : 'border-red-100 bg-red-50/30'} relative overflow-hidden">
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">${escapeHTML(game.sport_name)}</p>
+                                                    <p class="font-black text-slate-900 text-lg">vs ${escapeHTML(opponent)}</p>
+                                                </div>
+                                                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${isWin ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">
+                                                    ${isWin ? 'Victory' : 'Defeat'}
+                                                </span>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                                <div class="bg-white/60 p-3 rounded-xl border border-white">
+                                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Points Earned</p>
+                                                    <p class="font-bold text-slate-900">+${pts}</p>
+                                                </div>
+                                                <div class="bg-white/60 p-3 rounded-xl border border-white">
+                                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Date</p>
+                                                    <p class="font-bold text-slate-900">${formatDateTime(game.match_time)}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join("")
+                            }
+                        </div>
+                    </div>
+                `;
+            }
+
+            async function loadMatches(options = {}) {
+                if (isLoadingMatches) return;
+
+                const { showLoading = false } = options;
+                isLoadingMatches = true;
+
+                if (showLoading || studentMatchesData.length === 0) {
+                    studentMatchesGrid.innerHTML = `
+                        <div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200">
+                            <div class="flex flex-col items-center space-y-3">
+                                <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                <p class="text-slate-500 font-medium">Fetching latest matches...</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                setRealtimeStatus("Syncing latest match updates...");
+
+                const { data, error } = await supabase
+                    .from(MATCHES_TABLE)
+                    .select(`
+                        id, sport_id, team_one_id, team_two_id, match_time, location, status, timer_enabled, timer_duration_seconds, timer_started_at,
+                        sport:sports!scheduled_matches_sport_id_fkey(id, sport_name, winner_points, loser_points, points_per_game),
+                        team_one:sports_leaderboard!scheduled_matches_team_one_fkey(team),
+                        team_two:sports_leaderboard!scheduled_matches_team_two_fkey(team)
+                    `)
+                    .order("match_time", { ascending: true });
+
+                if (error) {
+                    console.error("Student match load error:", error.message || error);
+                    studentMatchesGrid.innerHTML = `<div class="col-span-full p-10 text-center text-red-500 font-bold">Failed to load matches.</div>`;
+                    setRealtimeStatus("Could not sync live matches. Please check Supabase realtime/RLS settings.", "error");
+                    isLoadingMatches = false;
+                    return;
+                }
+
+                studentMatchesData = data || [];
+                const matchIds = studentMatchesData.map(m => m.id);
+                if (matchIds.length > 0) {
+                    const { data: historyRows, error: historyError } = await supabase.from(GAME_HISTORY_TABLE).select("*").in("match_id", matchIds);
+                    if (!historyError && Array.isArray(historyRows)) {
+                        const historyMap = new Map();
+                        historyRows.forEach(h => historyMap.set(Number(h.match_id), h));
+                        studentMatchesData = studentMatchesData.map(m => ({ ...m, game_history: historyMap.get(Number(m.id)) || null }));
+                    }
+                }
+                renderMatches();
+                setRealtimeStatus(`Live updates active. Last synced ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}.`);
+                isLoadingMatches = false;
+            }
+
+            function renderMatches() {
+                let filtered = [...studentMatchesData];
+
+                if (activeScheduleFilter !== "All") {
+                    filtered = filtered.filter(m => m.status === activeScheduleFilter);
+                }
+
+                if (activeSportCategoryFilter !== "All") {
+                    filtered = filtered.filter(m =>
+                        String(m.sport_id) === String(activeSportCategoryFilter) ||
+                        String(m.sport?.id) === String(activeSportCategoryFilter)
+                    );
+                }
+
+                updateScheduleFilterSummary(filtered.length);
+
+                if (filtered.length === 0) {
+                    studentMatchesGrid.innerHTML = `<div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200 text-slate-400 italic">No matches found for the selected status and game category.</div>`;
+                    return;
+                }
+
+                const sorted = [...filtered].sort((a, b) => {
+                    const order = { Ongoing: 0, Next: 1, Done: 2 };
+                    const diff = (order[a.status] ?? 99) - (order[b.status] ?? 99);
+                    return diff !== 0 ? diff : new Date(a.match_time || 0) - new Date(b.match_time || 0);
+                });
+
+                studentMatchesGrid.innerHTML = "";
+                sorted.forEach(match => {
+                    const meta = getStatusMeta(match.status);
+                    const t1 = getTeamName(match, "one");
+                    const t2 = getTeamName(match, "two");
+                    const history = match.game_history;
+                    const remaining = calculateRemainingSeconds(match);
+                    const duration = clampTimerSeconds(match.timer_duration_seconds) || 600;
+                    const isUpcoming = match.status === "Next";
+                    const isDone = match.status === "Done";
+                    const showTimer = isUpcoming && (match.timer_enabled || duration > 0);
+
+                    const card = document.createElement("div");
+                    card.className = "card-hover bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col";
+                    card.innerHTML = `
+                        <div class="p-6 flex-1">
+                            <div class="flex justify-between items-start gap-4 mb-6">
+                                <div class="min-w-0">
+                                    <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Game Category</p>
+                                    <h3 class="text-2xl font-black text-slate-900 leading-tight break-words">🏅 ${escapeHTML(getSportName(match))}</h3>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">${meta.icon} ${meta.label}</p>
+                                </div>
+                                <span class="shrink-0 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${meta.badge}">
+                                    ${meta.label}
+                                </span>
+                            </div>
+
+                            ${showTimer ? `
+                                <div class="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Pre-game Countdown</p>
+                                    <p class="student-match-countdown text-4xl font-black text-slate-900 tracking-tighter" 
+                                       data-match-id="${match.id}" data-duration-seconds="${duration}" 
+                                       data-timer-enabled="${match.timer_enabled}" data-started-at="${match.timer_started_at || ''}">
+                                        ${formatTimerDisplay(remaining)}
+                                    </p>
+                                </div>
+                            ` : ''}
+
+                            <div class="flex items-center justify-between gap-4 mb-6">
+                                <div class="flex-1 text-center">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Team 1</p>
+                                    <p class="font-bold text-slate-900 truncate">${escapeHTML(t1)}</p>
+                                </div>
+                                <div class="text-slate-300 font-black italic">VS</div>
+                                <div class="flex-1 text-center">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Team 2</p>
+                                    <p class="font-bold text-slate-900 truncate">${escapeHTML(t2)}</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2 pt-4 border-t border-slate-50">
+                                <div class="flex items-center text-xs text-slate-500">
+                                    <span class="mr-2"> TIME :</span> ${formatDateTime(match.match_time)}
+                                </div>
+                                <div class="flex items-center text-xs text-slate-500">
+                                    <span class="mr-2"> LOCATION: </span> ${escapeHTML(match.location || "No location set")}
+                                </div>
+                            </div>
+
+                            ${isDone && history ? `
+                                <div class="mt-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+                                    <p class="text-[10px] font-bold text-emerald-600 uppercase mb-2">Final Result</p>
+                                    <p class="text-sm font-bold text-emerald-900">Winner: ${escapeHTML(history.winner_team_name)}</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button type="button" data-match-id="${match.id}" class="view-match-btn w-full py-4 bg-slate-50 hover:bg-blue-600 hover:text-white font-bold text-sm transition-all border-t border-slate-100">
+                            View Full Details
+                        </button>
+                    `;
+                    studentMatchesGrid.appendChild(card);
+                });
+
+                document.querySelectorAll(".view-match-btn").forEach(btn => {
+                    btn.onclick = function() {
+                        const m = studentMatchesData.find(x => Number(x.id) === Number(this.dataset.matchId));
+                        if (m) openMatchDetails(m);
+                    };
+                });
+                updateCountdownDisplays();
+            }
+
+            function openMatchDetails(match) {
+                const history = match.game_history;
+                const meta = getStatusMeta(match.status);
+                const duration = clampTimerSeconds(match.timer_duration_seconds) || 600;
+                const remaining = calculateRemainingSeconds(match);
+                const showTimer = match.status === "Next";
+
+                matchDetailsModal.classList.remove("hidden");
+                matchDetailsModal.classList.add("flex");
+                matchDetailsTitle.textContent = `${getSportName(match)} - Match Details`;
+
+                matchDetailsContent.innerHTML = `
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Sporting Event</p>
+                                <h3 class="text-3xl font-black text-slate-900">${escapeHTML(getSportName(match))}</h3>
+                            </div>
+                            <span class="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${meta.badge}">
+                                ${meta.label}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Team 1</p>
+                                <p class="text-xl font-black text-slate-900">${escapeHTML(getTeamName(match, "one"))}</p>
+                            </div>
+                            <div class="text-center font-black text-slate-200 text-2xl italic">VS</div>
+                            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Team 2</p>
+                                <p class="text-xl font-black text-slate-900">${escapeHTML(getTeamName(match, "two"))}</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center">
+                                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mr-4 text-xl">📅</div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Scheduled Time</p>
+                                    <p class="font-bold text-slate-900">${formatDateTime(match.match_time)}</p>
+                                </div>
+                            </div>
+                            <div class="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center">
+                                <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center mr-4 text-xl">📍</div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase">Location</p>
+                                    <p class="font-bold text-slate-900">${escapeHTML(match.location || "No location set")}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${showTimer ? `
+                            <div class="p-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl text-center text-white shadow-xl shadow-slate-200">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Pre-game Countdown</p>
+                                <p class="student-match-countdown text-6xl font-black tracking-tighter mb-4" 
+                                   data-match-id="${match.id}" data-duration-seconds="${duration}" 
+                                   data-timer-enabled="${match.timer_enabled}" data-started-at="${match.timer_started_at || ''}">
+                                    ${formatTimerDisplay(remaining)}
+                                </p>
+                                <p class="text-xs text-slate-400 font-medium">
+                                    ${match.timer_enabled ? "The countdown is currently active." : "Waiting for the committee to start the timer."}
+                                </p>
+                            </div>
+                        ` : ""}
+
+                        ${history ? `
+                            <div class="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                                <h4 class="text-emerald-700 font-black uppercase text-[10px] tracking-widest mb-4">Final Match Result</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center bg-white/50 p-3 rounded-xl">
+                                        <span class="text-sm font-bold text-slate-600">Winner</span>
+                                        <span class="font-black text-emerald-700">${escapeHTML(history.winner_team_name)}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-white/50 p-3 rounded-xl">
+                                        <span class="text-sm font-bold text-slate-600">Loser</span>
+                                        <span class="font-black text-red-600">${escapeHTML(history.loser_team_name)}</span>
+                                    </div>
+                                    <p class="text-[10px] text-emerald-600 font-bold text-right pt-2">DECLARED AT: ${formatDateTime(history.declared_at)}</p>
+                                </div>
+                            </div>
+                        ` : ""}
+                    </div>
+                `;
+                updateCountdownDisplays();
+            }
+
+            function closeMatchDetails() {
+                matchDetailsModal.classList.add("hidden");
+                matchDetailsModal.classList.remove("flex");
+            }
+
+            function setActiveScheduleFilter(val) {
+                activeScheduleFilter = val;
+                document.querySelectorAll(".schedule-filter").forEach(btn => {
+                    const active = btn.dataset.scheduleFilter === val;
+                    btn.className = active 
+                        ? "schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-blue-600 text-white shadow-md shadow-blue-100"
+                        : "schedule-filter whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200 bg-white border border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600";
+                });
+                renderMatches();
+            }
+
+            document.querySelectorAll(".schedule-filter").forEach(btn => {
+                btn.onclick = function() { setActiveScheduleFilter(this.dataset.scheduleFilter); };
+            });
+
+            if (gameCategoryFilter) {
+                gameCategoryFilter.addEventListener("change", function () {
+                    activeSportCategoryFilter = this.value || "All";
+                    renderMatches();
+                });
+            }
+
+            refreshLeaderboard.onclick = async () => { await Promise.all([loadLeaderboard({ showLoading: true }), loadStats()]); };
+            refreshMatches.onclick = async () => { await Promise.all([loadSportCategoryFilterOptions(), loadMatches({ showLoading: true }), loadStats()]); };
+            closeMatchDetailsModal.onclick = closeMatchDetails;
+            matchDetailsModal.onclick = (e) => { if (e.target === matchDetailsModal) closeMatchDetails(); };
+
+            await Promise.all([
+                loadStats(),
+                loadLeaderboard({ showLoading: true }),
+                loadSportCategoryFilterOptions(),
+                loadMatches({ showLoading: true })
+            ]);
+
+            setInterval(updateCountdownDisplays, 1000);
+            setInterval(() => {
+                scheduleLiveMatchReload(0);
+                scheduleLiveLeaderboardReload(0);
+            }, 15000);
+
+            document.addEventListener("visibilitychange", function () {
+                if (!document.hidden) {
+                    scheduleLiveMatchReload(0);
+                    scheduleLiveLeaderboardReload(0);
+                }
+            });
+
+            supabase.channel("student-dashboard-realtime")
+                .on("postgres_changes", { event: "*", schema: "public", table: TEAMS_TABLE }, () => {
+                    scheduleLiveLeaderboardReload(150);
+                    scheduleLiveMatchReload(150);
+                })
+                .on("postgres_changes", { event: "*", schema: "public", table: PARTICIPANTS_TABLE }, async () => {
+                    await loadStats();
+                })
+                .on("postgres_changes", { event: "*", schema: "public", table: MATCHES_TABLE }, () => {
+                    scheduleLiveMatchReload(150);
+                })
+                .on("postgres_changes", { event: "*", schema: "public", table: GAME_HISTORY_TABLE }, () => {
+                    scheduleLiveLeaderboardReload(150);
+                    scheduleLiveMatchReload(150);
+                })
+                .on("postgres_changes", { event: "*", schema: "public", table: SPORTS_TABLE }, async () => {
+                    await loadSportCategoryFilterOptions();
+                    scheduleLiveLeaderboardReload(150);
+                    scheduleLiveMatchReload(150);
+                })
+                .subscribe((status) => {
+                    if (status === "SUBSCRIBED") {
+                        setRealtimeStatus("Live updates connected.");
+                        setLeaderboardStatus("Live leaderboard connected.");
+                    } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+                        setRealtimeStatus("Realtime listener had a connection issue. Fallback auto-refresh is still active.", "warning");
+                        setLeaderboardStatus("Realtime listener had a connection issue. Fallback auto-refresh is still active.", "warning");
+                    } else if (status === "CLOSED") {
+                        setRealtimeStatus("Realtime listener closed. Fallback auto-refresh is still active.", "warning");
+                        setLeaderboardStatus("Realtime listener closed. Fallback auto-refresh is still active.", "warning");
+                    }
+                });
+        });
+    </script>
+</body>
+</html>

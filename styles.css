@@ -1,0 +1,104 @@
+/* Shared styles for CSC CUP pages */
+
+/* Base typography */
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+/* Responsive root sizing and fluid media */
+html {
+    box-sizing: border-box;
+    font-size: clamp(14px, 1.6vw, 16px);
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+img, picture, video, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Ensure main container doesn't overflow on very small screens */
+.max-w-7xl {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (max-width: 640px) {
+    html, body {
+        overflow-x: hidden;
+    }
+
+    /* Tailwind utility classes with bracket syntax need escaping when targeted in CSS */
+    .min-w-\[760px\], .min-w-\[700px\] {
+        min-width: 0 !important;
+    }
+
+    .w-80 {
+        width: 100% !important;
+    }
+}
+
+/* Page-specific mobile tweaks: collapse sidebar, stack content, adjust paddings */
+@media (max-width: 768px) {
+    /* Stack sidebar above main content */
+    .min-h-screen.flex {
+        flex-direction: column;
+    }
+
+    /* Sidebar becomes full-width and sits above the main area */
+    .w-80 {
+        width: 100% !important;
+        position: relative !important;
+        border-right: 0 !important;
+        box-shadow: none !important;
+    }
+
+    /* Main content fills width below sidebar */
+    .flex-1 {
+        width: 100% !important;
+    }
+
+    /* Make tables more flexible: allow horizontal scroll and wrap long words */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100% !important;
+        table-layout: auto !important;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+
+    /* Reduce padding on common card containers for small screens */
+    .p-6 {
+        padding: 0.75rem !important;
+    }
+
+    .p-8 {
+        padding: 1rem !important;
+    }
+
+    .text-3xl {
+        font-size: 1.4rem !important;
+    }
+
+    .text-4xl {
+        font-size: 1.6rem !important;
+    }
+}
