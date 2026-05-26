@@ -70,11 +70,11 @@
         @media (max-width: 640px) {
             .leaderboard-table {
                 table-layout: fixed;
-                min-width: 600px;
+                min-width: 0;
             }
 
             .mobile-table-container {
-                overflow-x: auto;
+                overflow-x: visible;
                 border-radius: 0.75rem;
                 box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
             }
@@ -86,6 +86,7 @@
             .stats-card-value {
                 font-size: 1.75rem;
             }
+
         }
 
         /* Custom Scrollbar */
@@ -108,7 +109,7 @@
 
 <body class="bg-slate-50 text-slate-900 min-h-screen">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 border-b border-yellow-700 shadow-md sticky top-0 z-50">
+    <header class="dashboard-header bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 border-b border-yellow-700 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4 min-w-0">
@@ -124,6 +125,7 @@
                         <p class="text-[10px] sm:text-xs font-semibold text-gray-800 uppercase tracking-widest opacity-80">Student Dashboard</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </header>
@@ -157,19 +159,7 @@
                     <p class="text-slate-500 font-medium">
                         CSC L.I.V.E. - League Information & Viewing Engine
                     </p>
-
-                    <p id="leaderboardRealtimeStatus" class="text-xs font-semibold text-emerald-600 mt-2">
-                        Live leaderboard sync is starting...
-                    </p>
                 </div>
-
-                <button
-                    type="button"
-                    id="refreshLeaderboard"
-                    class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Refresh Data
-                </button>
             </div>
 
             <!-- Leaderboard Table -->
@@ -244,28 +234,11 @@
                     <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Game Schedule</h2>
                     <p class="text-slate-500 font-medium">Stay updated with live and upcoming matches</p>
                 </div>
-
-                <button
-                    type="button"
-                    id="refreshMatches"
-                    class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    Refresh Matches
-                </button>
             </div>
 
             <!-- Schedule Filters -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div>
-                        <p id="scheduleFilterSummary" class="text-sm font-bold text-slate-700">
-                            Showing all matches for all sports.
-                        </p>
-                        <p id="scheduleRealtimeStatus" class="text-xs font-semibold text-emerald-600 mt-1">
-                            Live updates are starting...
-                        </p>
-                    </div>
-
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-end gap-4">
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                         <label for="gameCategoryFilter" class="text-xs font-black uppercase tracking-widest text-slate-500 whitespace-nowrap">
                             Game Category
@@ -325,9 +298,9 @@
     <!-- Match Details Modal -->
     <div
         id="matchDetailsModal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4 transition-all duration-300">
+        class="dashboard-modal-overlay fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4 transition-all duration-300">
 
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col transform transition-all scale-100">
+        <div class="dashboard-modal-panel bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col transform transition-all scale-100">
             <!-- Modal Header -->
             <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-6 flex items-center justify-between">
                 <h2 id="matchDetailsTitle" class="text-xl font-bold text-white tracking-tight">
@@ -410,17 +383,12 @@
             const SPORTS_TABLE = "sports";
 
             const studentLeaderboardBody = document.getElementById("studentLeaderboardBody");
-            const leaderboardRealtimeStatus = document.getElementById("leaderboardRealtimeStatus");
             const studentTotalTeams = document.getElementById("studentTotalTeams");
             const studentTotalMatches = document.getElementById("studentTotalMatches");
             const studentTotalParticipants = document.getElementById("studentTotalParticipants");
 
-            const refreshLeaderboard = document.getElementById("refreshLeaderboard");
-            const refreshMatches = document.getElementById("refreshMatches");
             const studentMatchesGrid = document.getElementById("studentMatchesGrid");
             const gameCategoryFilter = document.getElementById("gameCategoryFilter");
-            const scheduleFilterSummary = document.getElementById("scheduleFilterSummary");
-            const scheduleRealtimeStatus = document.getElementById("scheduleRealtimeStatus");
 
             const matchDetailsModal = document.getElementById("matchDetailsModal");
             const closeMatchDetailsModal = document.getElementById("closeMatchDetailsModal");
@@ -433,10 +401,13 @@
             let registeredSports = [];
             let matchReloadTimer = null;
             let leaderboardReloadTimer = null;
+            let dashboardBackgroundTimer = null;
             let isLoadingMatches = false;
             let isLoadingLeaderboard = false;
             let lastLeaderboardRows = [];
             let lastLeaderboardHistoryRows = [];
+            let lastLeaderboardSignature = "";
+            let lastMatchesSignature = "";
 
             function escapeHTML(value) {
                 return String(value ?? "")
@@ -445,6 +416,39 @@
                     .replaceAll(">", "&gt;")
                     .replaceAll('"', "&quot;")
                     .replaceAll("'", "&#039;");
+            }
+
+            function applyDashboardBackgrounds(images) {
+                const savedImages = Array.isArray(images) ? images.filter(Boolean) : [];
+                window.clearInterval(dashboardBackgroundTimer);
+
+                if (savedImages.length === 0) {
+                    document.documentElement.style.removeProperty("--dashboard-photo-url");
+                    document.documentElement.style.removeProperty("--dashboard-photo-size");
+                    return;
+                }
+
+                let currentIndex = 0;
+                document.documentElement.style.setProperty("--dashboard-photo-size", "cover");
+                document.documentElement.style.setProperty("--dashboard-photo-url", `url("${savedImages[currentIndex]}")`);
+
+                if (savedImages.length > 1) {
+                    dashboardBackgroundTimer = window.setInterval(() => {
+                        currentIndex = (currentIndex + 1) % savedImages.length;
+                        document.documentElement.style.setProperty("--dashboard-photo-url", `url("${savedImages[currentIndex]}")`);
+                    }, 7000);
+                }
+            }
+
+            function loadSavedDashboardBackgrounds() {
+                try {
+                    const savedImages = JSON.parse(localStorage.getItem("dashboardBackgroundImages") || "[]");
+                    applyDashboardBackgrounds(savedImages);
+                } catch (error) {
+                    console.warn("Saved dashboard background images could not be loaded:", error.message || error);
+                    localStorage.removeItem("dashboardBackgroundImages");
+                    applyDashboardBackgrounds([]);
+                }
             }
 
             function formatDateTime(dateValue) {
@@ -489,57 +493,6 @@
                 return match.sport?.sport_name || match.sport_name || "Unknown Sport";
             }
 
-            function setRealtimeStatus(message, tone = "success") {
-                if (!scheduleRealtimeStatus) return;
-
-                const toneClass = tone === "error"
-                    ? "text-red-600"
-                    : tone === "warning"
-                        ? "text-amber-600"
-                        : "text-emerald-600";
-
-                scheduleRealtimeStatus.className = `text-xs font-semibold ${toneClass}`;
-                scheduleRealtimeStatus.textContent = message;
-            }
-
-            function setLeaderboardStatus(message, tone = "success") {
-                if (!leaderboardRealtimeStatus) return;
-
-                const toneClass = tone === "error"
-                    ? "text-red-600"
-                    : tone === "warning"
-                        ? "text-amber-600"
-                        : "text-emerald-600";
-
-                leaderboardRealtimeStatus.className = `text-xs font-semibold ${toneClass} mt-2`;
-                leaderboardRealtimeStatus.textContent = message;
-            }
-
-            function getSelectedSportName() {
-                if (activeSportCategoryFilter === "All") {
-                    return "all sports";
-                }
-
-                const selectedSport = registeredSports.find(sport => String(sport.id) === String(activeSportCategoryFilter));
-                return selectedSport?.sport_name || "selected sport";
-            }
-
-            function updateScheduleFilterSummary(visibleCount = null) {
-                if (!scheduleFilterSummary) return;
-
-                const statusLabel = activeScheduleFilter === "All"
-                    ? "all game statuses"
-                    : activeScheduleFilter === "Next"
-                        ? "upcoming games"
-                        : activeScheduleFilter === "Ongoing"
-                            ? "ongoing games"
-                            : "completed games";
-
-                const sportLabel = getSelectedSportName();
-                const countText = Number.isFinite(Number(visibleCount)) ? `${visibleCount} match${Number(visibleCount) === 1 ? "" : "es"}` : "matches";
-                scheduleFilterSummary.textContent = `Showing ${countText} for ${statusLabel} in ${sportLabel}.`;
-            }
-
             function scheduleLiveMatchReload(delay = 250) {
                 window.clearTimeout(matchReloadTimer);
 
@@ -570,7 +523,6 @@
 
                 if (error) {
                     console.error("Error loading sport category filters:", error.message || error);
-                    setRealtimeStatus("Live updates are active, but sport category filters could not be refreshed.", "warning");
                     return;
                 }
 
@@ -591,7 +543,6 @@
                 const stillExists = previousValue === "All" || registeredSports.some(sport => String(sport.id) === String(previousValue));
                 activeSportCategoryFilter = stillExists ? previousValue : "All";
                 gameCategoryFilter.value = activeSportCategoryFilter;
-                updateScheduleFilterSummary();
             }
 
             function getStatusMeta(status) {
@@ -663,9 +614,17 @@
                     countRows(MATCHES_TABLE),
                     countRows(PARTICIPANTS_TABLE)
                 ]);
-                studentTotalTeams.textContent = totalTeams;
-                studentTotalMatches.textContent = totalMatches;
-                studentTotalParticipants.textContent = totalParticipants;
+
+                [
+                    [studentTotalTeams, totalTeams],
+                    [studentTotalMatches, totalMatches],
+                    [studentTotalParticipants, totalParticipants]
+                ].forEach(([element, value]) => {
+                    const nextValue = String(value);
+                    if (element && element.textContent !== nextValue) {
+                        element.textContent = nextValue;
+                    }
+                });
             }
 
             async function loadLeaderboard(options = {}) {
@@ -676,7 +635,7 @@
                 const { showLoading = false } = options;
                 isLoadingLeaderboard = true;
 
-                const shouldShowLoading = showLoading || lastLeaderboardRows.length === 0;
+                const shouldShowLoading = lastLeaderboardRows.length === 0;
 
                 if (shouldShowLoading) {
                     studentLeaderboardBody.innerHTML = `
@@ -691,8 +650,6 @@
                     `;
                 }
 
-                setLeaderboardStatus("Syncing latest leaderboard data...");
-
                 try {
                     const { data: teams, error: teamsError } = await supabase
                         .from(TEAMS_TABLE)
@@ -704,7 +661,6 @@
 
                         if (lastLeaderboardRows.length > 0) {
                             renderLeaderboardRows(lastLeaderboardRows, lastLeaderboardHistoryRows);
-                            setLeaderboardStatus("Could not refresh teams. Showing last loaded leaderboard.", "warning");
                         } else {
                             studentLeaderboardBody.innerHTML = `
                                 <tr>
@@ -713,7 +669,6 @@
                                     </td>
                                 </tr>
                             `;
-                            setLeaderboardStatus("Leaderboard failed to load teams.", "error");
                         }
 
                         return;
@@ -736,28 +691,20 @@
                     }
 
                     const leaderboardRows = buildLeaderboardRows(teams || [], historyError ? [] : (historyRows || []), sportsRows || []);
+                    const leaderboardSignature = JSON.stringify(leaderboardRows);
                     lastLeaderboardRows = leaderboardRows;
                     lastLeaderboardHistoryRows = historyError ? [] : (historyRows || []);
 
-                    renderLeaderboardRows(leaderboardRows, lastLeaderboardHistoryRows);
-
-                    const syncTime = new Date().toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit"
-                    });
-
-                    if (historyError) {
-                        setLeaderboardStatus(`Live sync active. Game history could not be read, so stored team values/zeroes are shown. Last synced ${syncTime}.`, "warning");
-                    } else {
-                        setLeaderboardStatus(`Live leaderboard connected. Last synced ${syncTime}.`);
+                    if (leaderboardSignature !== lastLeaderboardSignature) {
+                        renderLeaderboardRows(leaderboardRows, lastLeaderboardHistoryRows);
+                        lastLeaderboardSignature = leaderboardSignature;
                     }
+
                 } catch (error) {
                     console.error("Leaderboard load error:", error.message || error);
 
                     if (lastLeaderboardRows.length > 0) {
                         renderLeaderboardRows(lastLeaderboardRows, lastLeaderboardHistoryRows);
-                        setLeaderboardStatus("Leaderboard refresh failed. Showing last loaded values.", "warning");
                     } else {
                         studentLeaderboardBody.innerHTML = `
                             <tr>
@@ -766,7 +713,6 @@
                                 </td>
                             </tr>
                         `;
-                        setLeaderboardStatus("Leaderboard failed to load.", "error");
                     }
                 } finally {
                     isLoadingLeaderboard = false;
@@ -1100,6 +1046,10 @@
                                                     <p class="font-bold text-slate-900">${formatDateTime(game.match_time)}</p>
                                                 </div>
                                             </div>
+                                            <div class="mt-4 bg-white/70 p-3 rounded-xl border border-white text-sm">
+                                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Player of the Game</p>
+                                                <p class="font-bold text-slate-900">${escapeHTML(game.best_player || "Not recorded")}</p>
+                                            </div>
                                         </div>
                                     `;
                                 }).join("")
@@ -1115,7 +1065,7 @@
                 const { showLoading = false } = options;
                 isLoadingMatches = true;
 
-                if (showLoading || studentMatchesData.length === 0) {
+                if (studentMatchesData.length === 0) {
                     studentMatchesGrid.innerHTML = `
                         <div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200">
                             <div class="flex flex-col items-center space-y-3">
@@ -1125,8 +1075,6 @@
                         </div>
                     `;
                 }
-
-                setRealtimeStatus("Syncing latest match updates...");
 
                 const { data, error } = await supabase
                     .from(MATCHES_TABLE)
@@ -1140,8 +1088,9 @@
 
                 if (error) {
                     console.error("Student match load error:", error.message || error);
-                    studentMatchesGrid.innerHTML = `<div class="col-span-full p-10 text-center text-red-500 font-bold">Failed to load matches.</div>`;
-                    setRealtimeStatus("Could not sync live matches. Please check Supabase realtime/RLS settings.", "error");
+                    if (studentMatchesData.length === 0) {
+                        studentMatchesGrid.innerHTML = `<div class="col-span-full p-10 text-center text-red-500 font-bold">Failed to load matches.</div>`;
+                    }
                     isLoadingMatches = false;
                     return;
                 }
@@ -1156,8 +1105,11 @@
                         studentMatchesData = studentMatchesData.map(m => ({ ...m, game_history: historyMap.get(Number(m.id)) || null }));
                     }
                 }
-                renderMatches();
-                setRealtimeStatus(`Live updates active. Last synced ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}.`);
+                const matchesSignature = JSON.stringify(studentMatchesData);
+                if (matchesSignature !== lastMatchesSignature) {
+                    renderMatches();
+                    lastMatchesSignature = matchesSignature;
+                }
                 isLoadingMatches = false;
             }
 
@@ -1174,8 +1126,6 @@
                         String(m.sport?.id) === String(activeSportCategoryFilter)
                     );
                 }
-
-                updateScheduleFilterSummary(filtered.length);
 
                 if (filtered.length === 0) {
                     studentMatchesGrid.innerHTML = `<div class="col-span-full py-20 text-center bg-white rounded-2xl border border-slate-200 text-slate-400 italic">No matches found for the selected status and game category.</div>`;
@@ -1206,9 +1156,7 @@
                         <div class="p-6 flex-1">
                             <div class="flex justify-between items-start gap-4 mb-6">
                                 <div class="min-w-0">
-                                    <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Game Category</p>
-                                    <h3 class="text-2xl font-black text-slate-900 leading-tight break-words">🏅 ${escapeHTML(getSportName(match))}</h3>
-                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">${meta.icon} ${meta.label}</p>
+                                    <h3 class="text-2xl font-black text-slate-900 leading-tight break-words"> ${escapeHTML(getSportName(match))}</h3>
                                 </div>
                                 <span class="shrink-0 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${meta.badge}">
                                     ${meta.label}
@@ -1251,12 +1199,10 @@
                                 <div class="mt-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
                                     <p class="text-[10px] font-bold text-emerald-600 uppercase mb-2">Final Result</p>
                                     <p class="text-sm font-bold text-emerald-900">Winner: ${escapeHTML(history.winner_team_name)}</p>
+                                    <p class="text-sm font-bold text-emerald-900 mt-1">Player of the Game: ${escapeHTML(history.best_player || "Not recorded")}</p>
                                 </div>
                             ` : ''}
                         </div>
-                        <button type="button" data-match-id="${match.id}" class="view-match-btn w-full py-4 bg-slate-50 hover:bg-blue-600 hover:text-white font-bold text-sm transition-all border-t border-slate-100">
-                            View Full Details
-                        </button>
                     `;
                     studentMatchesGrid.appendChild(card);
                 });
@@ -1348,6 +1294,10 @@
                                         <span class="text-sm font-bold text-slate-600">Loser</span>
                                         <span class="font-black text-red-600">${escapeHTML(history.loser_team_name)}</span>
                                     </div>
+                                    <div class="flex justify-between items-center bg-white/50 p-3 rounded-xl">
+                                        <span class="text-sm font-bold text-slate-600">Player of the Game</span>
+                                        <span class="font-black text-emerald-700 text-right">${escapeHTML(history.best_player || "Not recorded")}</span>
+                                    </div>
                                     <p class="text-[10px] text-emerald-600 font-bold text-right pt-2">DECLARED AT: ${formatDateTime(history.declared_at)}</p>
                                 </div>
                             </div>
@@ -1384,8 +1334,8 @@
                 });
             }
 
-            refreshLeaderboard.onclick = async () => { await Promise.all([loadLeaderboard({ showLoading: true }), loadStats()]); };
-            refreshMatches.onclick = async () => { await Promise.all([loadSportCategoryFilterOptions(), loadMatches({ showLoading: true }), loadStats()]); };
+            loadSavedDashboardBackgrounds();
+
             closeMatchDetailsModal.onclick = closeMatchDetails;
             matchDetailsModal.onclick = (e) => { if (e.target === matchDetailsModal) closeMatchDetails(); };
 
@@ -1431,14 +1381,11 @@
                 })
                 .subscribe((status) => {
                     if (status === "SUBSCRIBED") {
-                        setRealtimeStatus("Live updates connected.");
-                        setLeaderboardStatus("Live leaderboard connected.");
+                        return;
                     } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-                        setRealtimeStatus("Realtime listener had a connection issue. Fallback auto-refresh is still active.", "warning");
-                        setLeaderboardStatus("Realtime listener had a connection issue. Fallback auto-refresh is still active.", "warning");
+                        console.warn("Realtime listener had a connection issue. Fallback auto-refresh is still active.");
                     } else if (status === "CLOSED") {
-                        setRealtimeStatus("Realtime listener closed. Fallback auto-refresh is still active.", "warning");
-                        setLeaderboardStatus("Realtime listener closed. Fallback auto-refresh is still active.", "warning");
+                        console.warn("Realtime listener closed. Fallback auto-refresh is still active.");
                     }
                 });
         });
