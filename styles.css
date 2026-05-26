@@ -7,22 +7,44 @@ html {
 body {
     min-height: 100%;
     isolation: isolate;
+    background-color: #f8fafc;
 }
 
-body::before {
+body::before,
+body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-image:
-        linear-gradient(rgba(248, 250, 252, 0.88), rgba(248, 250, 252, 0.88)),
-        var(--dashboard-photo-url, url("dashboard-background-slides.png"));
     background-size: cover, var(--dashboard-photo-size, 300% 100%);
     background-position: center, 0% center;
     background-repeat: no-repeat;
-    opacity: 0.46;
-    animation: dashboardPhotoSlides 24s ease-in-out infinite;
+    animation: dashboardPhotoSlides 42s ease-in-out infinite;
+    transition: opacity 1.8s ease-in-out;
+    will-change: opacity;
+}
+
+body::before {
+    background-image:
+        linear-gradient(var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42)), var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42))),
+        var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("dashboard-backgrounds/dashboard-background-slides.png")));
+    opacity: 0.88;
+}
+
+body::after {
+    background-image:
+        linear-gradient(var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42)), var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42))),
+        var(--dashboard-photo-url-b, var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("dashboard-backgrounds/dashboard-background-slides.png"))));
+    opacity: 0;
+}
+
+body.dashboard-bg-show-b::before {
+    opacity: 0;
+}
+
+body.dashboard-bg-show-b::after {
+    opacity: 0.88;
 }
 
 @keyframes dashboardPhotoSlides {
@@ -89,33 +111,6 @@ body > footer {
     border-radius: 999px;
 }
 
-.dashboard-photo-button {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-height: 2.5rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.88);
-    padding: 0.6rem 1rem;
-    color: #1e3a8a;
-    font-size: 0.78rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    box-shadow: 0 8px 18px rgba(30, 64, 175, 0.16);
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.dashboard-photo-button input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-}
-
 .sidebar-logo-badge {
     width: 2.75rem;
     height: 2.75rem;
@@ -180,7 +175,84 @@ body > footer {
 .content-scroll,
 .content-scroll-area,
 main.max-w-7xl {
-    background: rgba(248, 250, 252, 0.66);
+    background: rgba(248, 250, 252, 0.36);
+}
+
+.content-scroll .bg-white,
+.content-scroll-area .bg-white,
+main.max-w-7xl .bg-white {
+    background-color: rgba(255, 255, 255, 0.68) !important;
+    border-color: rgba(100, 116, 139, 0.28) !important;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12) !important;
+    backdrop-filter: blur(8px);
+}
+
+.content-scroll .bg-gray-50,
+.content-scroll .bg-slate-50,
+.content-scroll-area .bg-gray-50,
+.content-scroll-area .bg-slate-50,
+main.max-w-7xl .bg-gray-50,
+main.max-w-7xl .bg-slate-50 {
+    background-color: rgba(248, 250, 252, 0.54) !important;
+    border-color: rgba(100, 116, 139, 0.24) !important;
+    backdrop-filter: blur(6px);
+}
+
+.content-scroll .bg-blue-50,
+.content-scroll-area .bg-blue-50,
+main.max-w-7xl .bg-blue-50 {
+    background-color: rgba(219, 234, 254, 0.58) !important;
+}
+
+.content-scroll .bg-emerald-50,
+.content-scroll-area .bg-emerald-50,
+main.max-w-7xl .bg-emerald-50 {
+    background-color: rgba(209, 250, 229, 0.58) !important;
+}
+
+.content-scroll .bg-amber-50,
+.content-scroll .bg-yellow-50,
+.content-scroll-area .bg-amber-50,
+.content-scroll-area .bg-yellow-50,
+main.max-w-7xl .bg-amber-50,
+main.max-w-7xl .bg-yellow-50 {
+    background-color: rgba(254, 243, 199, 0.62) !important;
+}
+
+.content-scroll .bg-red-50,
+.content-scroll-area .bg-red-50,
+main.max-w-7xl .bg-red-50 {
+    background-color: rgba(254, 226, 226, 0.58) !important;
+}
+
+.content-scroll .text-gray-500,
+.content-scroll-area .text-gray-500,
+main.max-w-7xl .text-gray-500,
+.content-scroll .text-slate-500,
+.content-scroll-area .text-slate-500,
+main.max-w-7xl .text-slate-500 {
+    color: #334155 !important;
+}
+
+.content-scroll .text-gray-600,
+.content-scroll-area .text-gray-600,
+main.max-w-7xl .text-gray-600,
+.content-scroll .text-slate-600,
+.content-scroll-area .text-slate-600,
+main.max-w-7xl .text-slate-600 {
+    color: #1f2937 !important;
+}
+
+.content-scroll .text-gray-700,
+.content-scroll-area .text-gray-700,
+main.max-w-7xl .text-gray-700,
+.content-scroll .text-slate-700,
+.content-scroll-area .text-slate-700,
+main.max-w-7xl .text-slate-700,
+.content-scroll .text-slate-400,
+.content-scroll-area .text-slate-400,
+main.max-w-7xl .text-slate-400 {
+    color: #0f172a !important;
 }
 
 .dashboard-overview-grid {
@@ -245,9 +317,25 @@ img, picture, video, svg {
         overflow-x: hidden;
     }
 
-    body::before {
-        opacity: 0.34;
+    body::before,
+    body::after {
         background-size: cover, 360% 100%;
+    }
+
+    body::before {
+        opacity: 0.82;
+    }
+
+    body::after {
+        opacity: 0;
+    }
+
+    body.dashboard-bg-show-b::before {
+        opacity: 0;
+    }
+
+    body.dashboard-bg-show-b::after {
+        opacity: 0.82;
     }
 
     .dashboard-header-brand {
@@ -265,13 +353,6 @@ img, picture, video, svg {
         width: 2.45rem;
         height: 2.45rem;
         padding: 0.18rem;
-    }
-
-    .dashboard-photo-button {
-        width: 100%;
-        min-height: 2.35rem;
-        padding: 0.55rem 0.75rem;
-        font-size: 0.68rem;
     }
 
     .dashboard-header .admin-header-text {
