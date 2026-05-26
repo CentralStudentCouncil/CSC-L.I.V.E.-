@@ -14,6 +14,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <script src="dashboard-backgrounds/backgrounds.js" defer></script>
 
     <style>
         :root {
@@ -399,7 +400,6 @@
             let registeredSports = [];
             let matchReloadTimer = null;
             let leaderboardReloadTimer = null;
-            let dashboardBackgroundTimer = null;
             let isLoadingMatches = false;
             let isLoadingLeaderboard = false;
             let lastLeaderboardRows = [];
@@ -414,39 +414,6 @@
                     .replaceAll(">", "&gt;")
                     .replaceAll('"', "&quot;")
                     .replaceAll("'", "&#039;");
-            }
-
-            function applyDashboardBackgrounds(images) {
-                const savedImages = Array.isArray(images) ? images.filter(Boolean) : [];
-                window.clearInterval(dashboardBackgroundTimer);
-
-                if (savedImages.length === 0) {
-                    document.documentElement.style.removeProperty("--dashboard-photo-url");
-                    document.documentElement.style.removeProperty("--dashboard-photo-size");
-                    return;
-                }
-
-                let currentIndex = 0;
-                document.documentElement.style.setProperty("--dashboard-photo-size", "cover");
-                document.documentElement.style.setProperty("--dashboard-photo-url", `url("${savedImages[currentIndex]}")`);
-
-                if (savedImages.length > 1) {
-                    dashboardBackgroundTimer = window.setInterval(() => {
-                        currentIndex = (currentIndex + 1) % savedImages.length;
-                        document.documentElement.style.setProperty("--dashboard-photo-url", `url("${savedImages[currentIndex]}")`);
-                    }, 7000);
-                }
-            }
-
-            function loadSavedDashboardBackgrounds() {
-                try {
-                    const savedImages = JSON.parse(localStorage.getItem("dashboardBackgroundImages") || "[]");
-                    applyDashboardBackgrounds(savedImages);
-                } catch (error) {
-                    console.warn("Saved dashboard background images could not be loaded:", error.message || error);
-                    localStorage.removeItem("dashboardBackgroundImages");
-                    applyDashboardBackgrounds([]);
-                }
             }
 
             function formatDateTime(dateValue) {
@@ -1331,8 +1298,6 @@
                     renderMatches();
                 });
             }
-
-            loadSavedDashboardBackgrounds();
 
             closeMatchDetailsModal.onclick = closeMatchDetails;
             matchDetailsModal.onclick = (e) => { if (e.target === matchDetailsModal) closeMatchDetails(); };
