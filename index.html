@@ -1,551 +1,853 @@
-/* Shared styles for CSC CUP pages */
-
-html {
-    min-height: 100%;
-}
-
-body {
-    min-height: 100%;
-    isolation: isolate;
-    background-color: #f8fafc;
-}
-
-body::before,
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-size: cover, var(--dashboard-photo-size, 300% 100%);
-    background-position: center, 0% center;
-    background-repeat: no-repeat;
-    animation: dashboardPhotoSlides 42s ease-in-out infinite;
-    transition: opacity 1.8s ease-in-out;
-    will-change: opacity;
-}
-
-body::before {
-    background-image:
-        linear-gradient(var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42)), var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42))),
-        var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("dashboard-background-slides.png")));
-    opacity: 0.88;
-}
-
-body::after {
-    background-image:
-        linear-gradient(var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42)), var(--dashboard-photo-overlay, rgba(248, 250, 252, 0.42))),
-        var(--dashboard-photo-url-b, var(--dashboard-photo-url-a, var(--dashboard-photo-url, url("dashboard-background-slides.png"))));
-    opacity: 0;
-}
-
-body.dashboard-bg-show-b::before {
-    opacity: 0;
-}
-
-body.dashboard-bg-show-b::after {
-    opacity: 0.88;
-}
-
-@keyframes dashboardPhotoSlides {
-    0%, 27% {
-        background-position: center, 0% center;
-    }
-
-    33%, 60% {
-        background-position: center, 50% center;
-    }
-
-    66%, 94% {
-        background-position: center, 100% center;
-    }
-
-    100% {
-        background-position: center, 0% center;
-    }
-}
-
-.admin-shell,
-.committee-shell,
-body > header,
-body > main,
-body > footer {
-    position: relative;
-    z-index: 1;
-}
-
-.dashboard-header {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(to right, #facc15, #eab308, #ca8a04) !important;
-    border-bottom: 4px solid #1d4ed8 !important;
-}
-
-.dashboard-header::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.62);
-}
-
-.dashboard-header-brand {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    margin-left: 1rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.18);
-    flex: 0 0 auto;
-    align-self: center;
-}
-
-.dashboard-header-brand img {
-    width: 2.75rem;
-    height: 2.75rem;
-    object-fit: contain;
-    border-radius: 999px;
-}
-
-.sidebar-logo-badge {
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    background: #ffffff;
-    padding: 0.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 18px rgba(30, 64, 175, 0.18);
-    flex: 0 0 auto;
-}
-
-.sidebar-logo-badge img,
-.admin-sidebar .sidebar-logo-badge img,
-.committee-sidebar .sidebar-logo-badge img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain;
-    border-radius: 999px;
-    display: block;
-}
-
-.dashboard-modal-overlay {
-    z-index: 1000 !important;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    background: rgba(15, 23, 42, 0.64) !important;
-    backdrop-filter: blur(5px);
-}
-
-.dashboard-modal-panel,
-.modal-panel {
-    width: min(100%, var(--modal-max-width, 42rem));
-    max-height: min(88vh, 760px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-#teamModal .dashboard-modal-panel,
-#sportModal .dashboard-modal-panel,
-#teamModal .modal-panel,
-#sportModal .modal-panel,
-#sportFilterModal .dashboard-modal-panel {
-    --modal-max-width: 30rem;
-}
-
-#participantModal .dashboard-modal-panel,
-#participantModal .modal-panel,
-#matchModal .dashboard-modal-panel,
-#resultModal .dashboard-modal-panel {
-    --modal-max-width: 34rem;
-}
-
-#historyModal .dashboard-modal-panel,
-#matchDetailsModal .dashboard-modal-panel {
-    --modal-max-width: 48rem;
-}
-
-.content-scroll,
-.content-scroll-area,
-main.max-w-7xl {
-    background: rgba(248, 250, 252, 0.36);
-}
-
-.content-scroll .bg-white,
-.content-scroll-area .bg-white,
-main.max-w-7xl .bg-white {
-    background-color: rgba(255, 255, 255, 0.68) !important;
-    border-color: rgba(100, 116, 139, 0.28) !important;
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12) !important;
-    backdrop-filter: blur(8px);
-}
-
-.content-scroll .bg-gray-50,
-.content-scroll .bg-slate-50,
-.content-scroll-area .bg-gray-50,
-.content-scroll-area .bg-slate-50,
-main.max-w-7xl .bg-gray-50,
-main.max-w-7xl .bg-slate-50 {
-    background-color: rgba(248, 250, 252, 0.54) !important;
-    border-color: rgba(100, 116, 139, 0.24) !important;
-    backdrop-filter: blur(6px);
-}
-
-.content-scroll .bg-blue-50,
-.content-scroll-area .bg-blue-50,
-main.max-w-7xl .bg-blue-50 {
-    background-color: rgba(219, 234, 254, 0.58) !important;
-}
-
-.content-scroll .bg-emerald-50,
-.content-scroll-area .bg-emerald-50,
-main.max-w-7xl .bg-emerald-50 {
-    background-color: rgba(209, 250, 229, 0.58) !important;
-}
-
-.content-scroll .bg-amber-50,
-.content-scroll .bg-yellow-50,
-.content-scroll-area .bg-amber-50,
-.content-scroll-area .bg-yellow-50,
-main.max-w-7xl .bg-amber-50,
-main.max-w-7xl .bg-yellow-50 {
-    background-color: rgba(254, 243, 199, 0.62) !important;
-}
-
-.content-scroll .bg-red-50,
-.content-scroll-area .bg-red-50,
-main.max-w-7xl .bg-red-50 {
-    background-color: rgba(254, 226, 226, 0.58) !important;
-}
-
-.content-scroll .text-gray-500,
-.content-scroll-area .text-gray-500,
-main.max-w-7xl .text-gray-500,
-.content-scroll .text-slate-500,
-.content-scroll-area .text-slate-500,
-main.max-w-7xl .text-slate-500 {
-    color: #334155 !important;
-}
-
-.content-scroll .text-gray-600,
-.content-scroll-area .text-gray-600,
-main.max-w-7xl .text-gray-600,
-.content-scroll .text-slate-600,
-.content-scroll-area .text-slate-600,
-main.max-w-7xl .text-slate-600 {
-    color: #1f2937 !important;
-}
-
-.content-scroll .text-gray-700,
-.content-scroll-area .text-gray-700,
-main.max-w-7xl .text-gray-700,
-.content-scroll .text-slate-700,
-.content-scroll-area .text-slate-700,
-main.max-w-7xl .text-slate-700,
-.content-scroll .text-slate-400,
-.content-scroll-area .text-slate-400,
-main.max-w-7xl .text-slate-400 {
-    color: #0f172a !important;
-}
-
-.dashboard-overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 0.75rem;
-}
-
-.dashboard-overview-card {
-    min-height: 7rem;
-    border-radius: 0.75rem;
-}
-
-.dashboard-overview-card > div {
-    min-width: 0;
-}
-
-.dashboard-overview-label,
-.dashboard-overview-note {
-    overflow-wrap: anywhere;
-}
-
-.dashboard-overview-value {
-    line-height: 1;
-}
-
-/* Base typography */
-* {
-    font-family: 'Inter', sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-}
-
-/* Responsive root sizing and fluid media */
-html {
-    box-sizing: border-box;
-    font-size: clamp(14px, 1.6vw, 16px);
-}
-
-*, *::before, *::after {
-    box-sizing: inherit;
-}
-
-img, picture, video, svg {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Ensure main container doesn't overflow on very small screens */
-.max-w-7xl {
-    width: 100%;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-@media (max-width: 640px) {
-    html, body {
-        overflow-x: hidden;
-    }
-
-    body::before,
-    body::after {
-        background-size: cover, 360% 100%;
-    }
-
-    body::before {
-        opacity: 0.82;
-    }
-
-    body::after {
-        opacity: 0;
-    }
-
-    body.dashboard-bg-show-b::before {
-        opacity: 0;
-    }
-
-    body.dashboard-bg-show-b::after {
-        opacity: 0.82;
-    }
-
-    .dashboard-header-brand {
-        width: 2.75rem;
-        height: 2.75rem;
-        margin-left: 0.65rem;
-    }
-
-    .dashboard-header-brand img {
-        width: 2.35rem;
-        height: 2.35rem;
-    }
-
-    .sidebar-logo-badge {
-        width: 2.45rem;
-        height: 2.45rem;
-        padding: 0.18rem;
-    }
-
-    .dashboard-header .admin-header-text {
-        max-width: calc(100vw - 8.5rem) !important;
-        padding-left: 0.65rem !important;
-        padding-right: 0.65rem !important;
-    }
-
-    .dashboard-header .admin-header-row {
-        align-items: center !important;
-        flex-wrap: wrap !important;
-        gap: 0.55rem !important;
-    }
-
-    .dashboard-overview-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 0.45rem !important;
-        margin-bottom: 0.8rem !important;
-    }
-
-    .dashboard-overview-card {
-        aspect-ratio: 1 / 1;
-        min-height: 0;
-        padding: 0.45rem !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        overflow: hidden;
-    }
-
-    .dashboard-overview-card > div,
-    .dashboard-overview-card > div > div {
-        width: 100%;
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.16rem !important;
-    }
-
-    .dashboard-overview-label {
-        font-size: 0.58rem !important;
-        line-height: 0.72rem !important;
-        font-weight: 700 !important;
-    }
-
-    .dashboard-overview-value {
-        font-size: 1.05rem !important;
-        line-height: 1.1rem !important;
-        margin-top: 0 !important;
-    }
-
-    .dashboard-overview-note,
-    .dashboard-overview-icon {
-        display: none !important;
-    }
-
-    .dashboard-modal-overlay {
-        align-items: flex-start !important;
-        justify-content: center !important;
-        padding: 0.75rem !important;
-    }
-
-    .dashboard-modal-panel,
-    .modal-panel {
-        width: 100% !important;
-        max-width: 100% !important;
-        max-height: calc(100dvh - 1.5rem) !important;
-        margin: 0 !important;
-        border-radius: 1rem !important;
-    }
-
-    /* Tailwind utility classes with bracket syntax need escaping when targeted in CSS */
-    .min-w-\[760px\],
-    .min-w-\[700px\],
-    .min-w-\[600px\],
-    .min-w-\[560px\],
-    .min-w-\[520px\],
-    .min-w-\[420px\] {
-        min-width: 0 !important;
-    }
-
-    .responsive-table-card,
-    .mobile-table-container,
-    .overflow-x-auto {
-        overflow-x: visible !important;
-    }
-
-    table,
-    .leaderboard-table {
-        min-width: 0 !important;
-        width: 100% !important;
-        table-layout: fixed !important;
-    }
-
-    th,
-    td {
-        padding: 0.45rem 0.35rem !important;
-        font-size: 0.68rem !important;
-        line-height: 0.9rem !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        overflow-wrap: anywhere !important;
-        vertical-align: top !important;
-    }
-
-    th {
-        letter-spacing: 0 !important;
-    }
-
-    td button,
-    td .inline-flex,
-    td span {
-        max-width: 100%;
-        white-space: normal !important;
-    }
-
-    td button {
-        padding: 0.3rem 0.4rem !important;
-        font-size: 0.65rem !important;
-        line-height: 0.8rem !important;
-    }
-
-    .leaderboard-rank-cell {
-        width: 14% !important;
-    }
-
-    .leaderboard-team-cell {
-        width: 34% !important;
-    }
-
-    .leaderboard-stat-cell {
-        width: 17.33% !important;
-    }
-
-    .w-80 {
-        width: 100% !important;
-    }
-}
-
-/* Page-specific mobile tweaks: collapse sidebar, stack content, adjust paddings */
-@media (max-width: 768px) {
-    /* Stack sidebar above main content */
-    .min-h-screen.flex {
-        flex-direction: column;
-    }
-
-    /* Sidebar becomes full-width and sits above the main area */
-    .w-80 {
-        width: 100% !important;
-        position: relative !important;
-        border-right: 0 !important;
-        box-shadow: none !important;
-    }
-
-    /* Main content fills width below sidebar */
-    .flex-1 {
-        width: 100% !important;
-    }
-
-    /* Make tables more flexible: allow horizontal scroll and wrap long words */
-    .overflow-x-auto {
-        -webkit-overflow-scrolling: touch;
-        overflow-x: visible;
-    }
-
-    table {
-        width: 100% !important;
-        table-layout: auto !important;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        white-space: normal !important;
-        word-break: break-word !important;
-    }
-
-    /* Reduce padding on common card containers for small screens */
-    .p-6 {
-        padding: 0.75rem !important;
-    }
-
-    .p-8 {
-        padding: 1rem !important;
-    }
-
-    .text-3xl {
-        font-size: 1.4rem !important;
-    }
-
-    .text-4xl {
-        font-size: 1.6rem !important;
-    }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSC L.I.V.E. - Sign In / Register</title>
+
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --accent: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)),
+                url("dashboard-backgrounds/dashboard-background-slides.png") center / cover no-repeat fixed;
+        }
+
+        h1,
+        h2,
+        h3,
+        .font-display {
+            font-family: "Poppins", "Inter", system-ui, sans-serif;
+        }
+
+        .auth-shell {
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .auth-panel {
+            width: min(100%, 28rem);
+        }
+
+        .auth-hero {
+            background-image:
+                linear-gradient(90deg, rgba(30, 58, 138, 0.92), rgba(29, 78, 216, 0.72)),
+                url("https://d2xsxph8kpxj0f.cloudfront.net/310519663079004813/HRScgrtMjfFKKgfh8EJfQz/hero-sports-banner-ZUVcr9VSPDhW6ei7AebP8T.webp");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mode-btn.active,
+        .role-btn.active,
+        .signin-role-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 18px rgba(30, 64, 175, 0.24);
+        }
+
+        .mode-btn:not(.active),
+        .role-btn:not(.active),
+        .signin-role-btn:not(.active) {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .auth-input {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 0.7rem 0.9rem 0.7rem 2.65rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+        }
+
+        .auth-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+            background: white;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                background:
+                    linear-gradient(rgba(248, 250, 252, 0.82), rgba(248, 250, 252, 0.9)),
+                    url("dashboard-backgrounds/dashboard-background-slides.png") center / cover no-repeat fixed;
+            }
+
+            .auth-shell {
+                display: block !important;
+                min-height: 100dvh;
+            }
+
+            .auth-panel {
+                width: 100%;
+                max-width: 25rem;
+                margin: 0 auto;
+            }
+
+            .auth-card {
+                border-radius: 1rem;
+                padding: 1.1rem !important;
+                box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+                background: rgba(255, 255, 255, 0.94);
+                backdrop-filter: blur(10px);
+            }
+
+            .form-wrap {
+                min-height: 100dvh !important;
+                padding: 1rem !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+            }
+
+            .mobile-brand {
+                display: flex !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .auth-title {
+                font-size: 1.45rem !important;
+                line-height: 1.8rem !important;
+                margin-bottom: 0.3rem !important;
+            }
+
+            .auth-subtitle {
+                font-size: 0.88rem !important;
+                line-height: 1.35rem !important;
+            }
+
+            #formTitle,
+            #formSubtitle {
+                text-align: left;
+            }
+
+            #signInForm,
+            #registerForm {
+                gap: 0.75rem;
+            }
+
+            .auth-input {
+                font-size: 0.88rem;
+                padding-top: 0.62rem;
+                padding-bottom: 0.62rem;
+            }
+
+            .mode-btn,
+            .role-btn,
+            .signin-role-btn,
+            .submit-btn {
+                font-size: 0.86rem !important;
+                padding-top: 0.68rem !important;
+                padding-bottom: 0.68rem !important;
+            }
+
+            .small-text {
+                font-size: 0.78rem !important;
+                line-height: 1.15rem !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .auth-card {
+                padding: 0.9rem !important;
+            }
+
+            .mode-btn,
+            .role-btn,
+            .signin-role-btn {
+                padding-left: 0.55rem !important;
+                padding-right: 0.55rem !important;
+            }
+
+            .mobile-brand p:first-child {
+                font-size: 0.78rem !important;
+                line-height: 1.1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <main class="auth-shell grid grid-cols-1 lg:grid-cols-2 bg-gray-50">
+
+        <!-- Hero Section -->
+        <section class="auth-hero hidden lg:flex relative overflow-hidden items-center justify-center px-8 py-12">
+            <div class="relative z-10 max-w-md text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-400 mb-6 shadow-lg">
+                    <img
+                        src="Adventist_University_of_the_Philippines_logo.png"
+                        alt="School Logo"
+                        class="w-16 h-16 object-contain">
+                </div>
+
+                <h1 class="font-display text-4xl font-bold text-white mb-4">
+                    Adventist University of the Philippines
+                </h1>
+
+                <p class="text-blue-100 text-lg mb-8">
+                    Central Student Council - Physical Development Web App
+                </p>
+
+                <div class="space-y-4 text-left">
+                    <div class="flex items-start gap-3">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-yellow-400 text-blue-900 font-bold">✓</div>
+                        <div>
+                            <p class="text-white font-semibold">Real-time Leaderboard</p>
+                            <p class="text-blue-100 text-sm">Track team performance instantly.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-yellow-400 text-blue-900 font-bold">✓</div>
+                        <div>
+                            <p class="text-white font-semibold">Game Scheduling</p>
+                            <p class="text-blue-100 text-sm">Organize matches and manage attendance.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-yellow-400 text-blue-900 font-bold">✓</div>
+                        <div>
+                            <p class="text-white font-semibold">Team Management</p>
+                            <p class="text-blue-100 text-sm">Manage participants and teams efficiently.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sign In / Register Section -->
+        <section class="form-wrap flex min-h-screen min-h-dvh items-center justify-center px-6 py-8 sm:px-8 lg:px-12">
+            <div class="auth-panel">
+
+                <!-- Mobile Brand -->
+                <div class="mobile-brand hidden items-center gap-3 mb-6">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-600">
+                        <img
+                            src="Adventist_University_of_the_Philippines_logo.png"
+                            alt="School Logo"
+                            class="h-10 w-10 object-contain">
+                    </div>
+                    <div>
+                        <p class="font-display text-sm font-bold text-blue-900">
+                            Adventist University of the Philippines
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            CSC- L.I.V.E.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 id="formTitle" class="auth-title font-display text-3xl font-bold text-gray-900 mb-2">
+                        Welcome Back
+                    </h2>
+                    <p id="formSubtitle" class="auth-subtitle text-gray-600">
+                        Sign in to access CSC-L.I.V.E.
+                    </p>
+                </div>
+
+                <div class="auth-card rounded-2xl bg-white p-6 sm:p-8 shadow-xl border border-gray-100">
+
+                    <!-- Mode Switch -->
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <button
+                            type="button"
+                            class="mode-btn active rounded-xl px-4 py-3 font-semibold transition"
+                            data-mode="signin">
+                            Sign In
+                        </button>
+
+                        <button
+                            type="button"
+                            class="mode-btn rounded-xl px-4 py-3 font-semibold transition"
+                            data-mode="register">
+                            Register
+                        </button>
+                    </div>
+
+                    <!-- Sign In Form -->
+                    <form id="signInForm" class="space-y-5">
+                        <div class="space-y-2">
+                            <label for="signInEmail" class="block text-sm font-medium text-gray-700">
+                                Email Address
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="signInEmail"
+                                    type="email"
+                                    required
+                                    autocomplete="email"
+                                    placeholder="your.email@school.edu"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="signInPassword" class="block text-sm font-medium text-gray-700">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="signInPassword"
+                                    type="password"
+                                    required
+                                    autocomplete="current-password"
+                                    placeholder="••••••••"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Sign in as
+                            </label>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    class="signin-role-btn active rounded-xl px-4 py-3 font-semibold transition"
+                                    data-signin-role="admin">
+                                    Admin
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="signin-role-btn rounded-xl px-4 py-3 font-semibold transition"
+                                    data-signin-role="committee">
+                                    Committee
+                                </button>
+                            </div>
+
+                            <p class="small-text text-xs text-gray-500">
+                                Choose the same role assigned to your account.
+                            </p>
+                        </div>
+
+                        <button
+                            id="signInSubmit"
+                            type="submit"
+                            class="submit-btn w-full rounded-xl bg-blue-600 py-3 font-semibold text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" class="hidden space-y-5">
+                        <div class="space-y-2">
+                            <label for="registerName" class="block text-sm font-medium text-gray-700">
+                                Full Name
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="registerName"
+                                    type="text"
+                                    required
+                                    autocomplete="name"
+                                    placeholder="Enter your full name"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="registerEmail" class="block text-sm font-medium text-gray-700">
+                                Email Address
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="registerEmail"
+                                    type="email"
+                                    required
+                                    autocomplete="email"
+                                    placeholder="your.email@school.edu"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="registerMobile" class="block text-sm font-medium text-gray-700">
+                                Mobile Number
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="registerMobile"
+                                    type="tel"
+                                    required
+                                    autocomplete="tel"
+                                    inputmode="tel"
+                                    placeholder="Enter mobile number"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="registerPassword" class="block text-sm font-medium text-gray-700">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="registerPassword"
+                                    type="password"
+                                    required
+                                    minlength="6"
+                                    autocomplete="new-password"
+                                    placeholder="Minimum 6 characters"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+                                Confirm Password
+                            </label>
+                            <div class="relative">
+                                <input
+                                    id="confirmPassword"
+                                    type="password"
+                                    required
+                                    minlength="6"
+                                    autocomplete="new-password"
+                                    placeholder="Repeat password"
+                                    class="auth-input">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Account Role
+                            </label>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    class="role-btn active rounded-xl px-4 py-3 font-semibold transition"
+                                    data-role="committee">
+                                    Committee
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="role-btn rounded-xl px-4 py-3 font-semibold transition"
+                                    data-role="admin">
+                                    Admin
+                                </button>
+                            </div>
+
+                            <p class="small-text text-xs text-gray-500">
+                                New accounts must be approved by an admin before dashboard access is allowed.
+                            </p>
+                        </div>
+
+                        <button
+                            id="registerSubmit"
+                            type="submit"
+                            class="submit-btn w-full rounded-xl bg-blue-600 py-3 font-semibold text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
+                            Create Account
+                        </button>
+                    </form>
+
+                    <!-- Alert -->
+                    <div id="alertBox" class="hidden mt-5 rounded-xl border p-4">
+                        <p id="alertMessage" class="text-sm"></p>
+                    </div>
+
+                    <div class="mt-6 border-t border-gray-200 pt-4">
+                        <p id="helperText" class="small-text text-center text-sm text-gray-600">
+                            No account yet?
+                            <button type="button" id="goRegister" class="font-semibold text-blue-600 hover:text-blue-700">
+                                Register here.
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+        const SUPABASE_URL = "https://unveyndaaznxgqojwjki.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVudmV5bmRhYXpueGdxb2p3amtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzQyNzUsImV4cCI6MjA5NDIxMDI3NX0.2RUriqqq9kITnl8uPZSdiSrXuo8BhD9nrzqHFUwl2yU";
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const signInForm = document.getElementById("signInForm");
+        const registerForm = document.getElementById("registerForm");
+        const formTitle = document.getElementById("formTitle");
+        const formSubtitle = document.getElementById("formSubtitle");
+        const helperText = document.getElementById("helperText");
+        const alertBox = document.getElementById("alertBox");
+        const alertMessage = document.getElementById("alertMessage");
+
+        const signInSubmit = document.getElementById("signInSubmit");
+        const registerSubmit = document.getElementById("registerSubmit");
+
+        let currentMode = "signin";
+        let selectedSignInRole = "admin";
+        let selectedRegisterRole = "committee";
+
+        function showAlert(type, message) {
+            alertBox.classList.remove("hidden", "bg-red-50", "border-red-200", "bg-green-50", "border-green-200", "bg-yellow-50", "border-yellow-200");
+            alertMessage.className = "text-sm";
+
+            if (type === "success") {
+                alertBox.classList.add("bg-green-50", "border-green-200");
+                alertMessage.classList.add("text-green-800");
+            } else if (type === "warning") {
+                alertBox.classList.add("bg-yellow-50", "border-yellow-200");
+                alertMessage.classList.add("text-yellow-800");
+            } else {
+                alertBox.classList.add("bg-red-50", "border-red-200");
+                alertMessage.classList.add("text-red-800");
+            }
+
+            alertMessage.textContent = message;
+        }
+
+        function hideAlert() {
+            alertBox.classList.add("hidden");
+            alertMessage.textContent = "";
+        }
+
+        function setLoading(button, isLoading, loadingText, normalText) {
+            button.disabled = isLoading;
+            button.textContent = isLoading ? loadingText : normalText;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            hideAlert();
+
+            document.querySelectorAll(".mode-btn").forEach(button => {
+                button.classList.toggle("active", button.dataset.mode === mode);
+            });
+
+            if (mode === "signin") {
+                signInForm.classList.remove("hidden");
+                registerForm.classList.add("hidden");
+                formTitle.textContent = "Welcome Back";
+                formSubtitle.textContent = "Sign in to access CSC-L.I.V.E.";
+                helperText.innerHTML = `
+                    No account yet?
+                    <button type="button" id="goRegister" class="font-semibold text-blue-600 hover:text-blue-700">
+                        Register here.
+                    </button>
+                `;
+                document.getElementById("goRegister").addEventListener("click", () => setMode("register"));
+            } else {
+                signInForm.classList.add("hidden");
+                registerForm.classList.remove("hidden");
+                formTitle.textContent = "Create Account";
+                helperText.innerHTML = `
+                    Already have an account?
+                    <button type="button" id="goSignIn" class="font-semibold text-blue-600 hover:text-blue-700">
+                        Sign in here.
+                    </button>
+                `;
+                document.getElementById("goSignIn").addEventListener("click", () => setMode("signin"));
+            }
+        }
+
+        function setSignInRole(role) {
+            selectedSignInRole = role;
+
+            document.querySelectorAll(".signin-role-btn").forEach(button => {
+                button.classList.toggle("active", button.dataset.signinRole === role);
+            });
+        }
+
+        function setRegisterRole(role) {
+            selectedRegisterRole = role;
+
+            document.querySelectorAll(".role-btn").forEach(button => {
+                button.classList.toggle("active", button.dataset.role === role);
+            });
+        }
+
+        function redirectByRole(role) {
+            if (role === "admin") {
+                window.location.href = "AdminDashboard.html";
+                return;
+            }
+
+            window.location.href = "CommitteeDashboard.html";
+        }
+
+        async function getUserProfile(user) {
+            const { data, error } = await supabase
+                .from("user_profiles")
+                .select("*")
+                .eq("id", user.id)
+                .maybeSingle();
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        }
+
+        function normalizeApprovalStatus(status) {
+            return String(status || "approved").trim().toLowerCase();
+        }
+
+        function isApprovedProfile(profile) {
+            return normalizeApprovalStatus(profile?.approval_status) === "approved";
+        }
+
+        async function ensurePendingProfile(user, fullName, mobileNumber, role) {
+            if (!user?.id) {
+                throw new Error("Account was created, but the user profile could not be identified.");
+            }
+
+            const { error } = await supabase
+                .from("user_profiles")
+                .upsert({
+                    id: user.id,
+                    email: user.email,
+                    full_name: fullName,
+                    mobile_number: mobileNumber,
+                    role,
+                    approval_status: "pending",
+                    reviewed_at: null,
+                    reviewed_by: null
+                }, {
+                    onConflict: "id"
+                });
+
+            if (error) {
+                throw error;
+            }
+        }
+
+        async function saveLocalSession(user, profile) {
+            const roleFromProfile = profile?.role;
+            const roleFromMetadata = user.user_metadata?.role;
+            const finalRole = roleFromProfile || roleFromMetadata || "committee";
+
+            const userData = {
+                id: user.id,
+                email: profile?.email || user.email,
+                fullName: profile?.full_name || user.user_metadata?.full_name || "",
+                mobileNumber: profile?.mobile_number || user.user_metadata?.mobile_number || "",
+                role: finalRole,
+                approvalStatus: normalizeApprovalStatus(profile?.approval_status),
+                loginTime: new Date().toISOString(),
+                authProvider: "supabase"
+            };
+
+            localStorage.setItem("user", JSON.stringify(userData));
+            return userData;
+        }
+
+        document.querySelectorAll(".mode-btn").forEach(button => {
+            button.addEventListener("click", () => setMode(button.dataset.mode));
+        });
+
+        document.querySelectorAll(".signin-role-btn").forEach(button => {
+            button.addEventListener("click", () => setSignInRole(button.dataset.signinRole));
+        });
+
+        document.querySelectorAll(".role-btn").forEach(button => {
+            button.addEventListener("click", () => setRegisterRole(button.dataset.role));
+        });
+
+        document.getElementById("goRegister").addEventListener("click", () => setMode("register"));
+
+        signInForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            hideAlert();
+
+            const email = document.getElementById("signInEmail").value.trim();
+            const password = document.getElementById("signInPassword").value;
+
+            if (!email || !password) {
+                showAlert("error", "Please enter your email and password.");
+                return;
+            }
+
+            setLoading(signInSubmit, true, "Signing in...", "Sign In");
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                const profile = await getUserProfile(data.user);
+                const actualRole = profile?.role || data.user.user_metadata?.role || "committee";
+
+                if (!isApprovedProfile(profile)) {
+                    await supabase.auth.signOut();
+                    localStorage.removeItem("user");
+
+                    const approvalStatus = normalizeApprovalStatus(profile?.approval_status);
+                    const statusLabel = approvalStatus === "rejected" ? "rejected" : "pending admin approval";
+                    showAlert("warning", `Your account is ${statusLabel}. Please wait for an admin to approve it before signing in.`);
+                    return;
+                }
+
+                if (actualRole !== selectedSignInRole) {
+                    const correctRoleLabel = actualRole === "admin" ? "Admin" : "Committee";
+                    const selectedRoleLabel = selectedSignInRole === "admin" ? "Admin" : "Committee";
+                    showAlert(
+                        "error",
+                        `This account is registered as ${correctRoleLabel}, but you selected ${selectedRoleLabel}. Please choose the correct sign-in role.`
+                    );
+                    return;
+                }
+
+                const userData = await saveLocalSession(data.user, profile);
+
+                redirectByRole(userData.role);
+
+            } catch (error) {
+                console.error("Sign in error:", error);
+                showAlert("error", error.message || "Failed to sign in. Check your account and password.");
+            } finally {
+                setLoading(signInSubmit, false, "Signing in...", "Sign In");
+            }
+        });
+
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            hideAlert();
+
+            const fullName = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim();
+            const mobileNumber = document.getElementById("registerMobile").value.trim();
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (!fullName || !email || !mobileNumber || !password || !confirmPassword) {
+                showAlert("error", "Please complete all registration fields.");
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert("error", "Password must be at least 6 characters.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert("error", "Passwords do not match.");
+                return;
+            }
+
+            setLoading(registerSubmit, true, "Creating account...", "Create Account");
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: fullName,
+                            mobile_number: mobileNumber,
+                            role: selectedRegisterRole
+                        }
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                const registeredRole = selectedRegisterRole;
+
+                await ensurePendingProfile(data.user, fullName, mobileNumber, registeredRole);
+
+                /*
+                    IMPORTANT FLOW UPDATE:
+                    Supabase can automatically create an active session after sign-up
+                    when email confirmation is disabled. The system must NOT redirect
+                    the user immediately after registration. The new user must sign in
+                    again so the dashboard always opens under the account they chose.
+                */
+                try {
+                    const { error: signOutError } = await supabase.auth.signOut();
+
+                    if (signOutError) {
+                        console.warn("Account was created, but automatic post-registration sign-out returned:", signOutError.message || signOutError);
+                    }
+                } catch (signOutCatchError) {
+                    console.warn("Account was created, but automatic post-registration sign-out could not complete:", signOutCatchError.message || signOutCatchError);
+                }
+
+                localStorage.removeItem("user");
+                registerForm.reset();
+                setRegisterRole("committee");
+                setMode("signin");
+                setSignInRole(registeredRole);
+
+                document.getElementById("signInEmail").value = email;
+                document.getElementById("signInPassword").value = "";
+
+                showAlert("success", "Account registered successfully. Please wait for admin approval before signing in.");
+
+            } catch (error) {
+                console.error("Register error:", error);
+                showAlert("error", error.message || "Failed to create account. Please check your Supabase setup.");
+            } finally {
+                setLoading(registerSubmit, false, "Creating account...", "Create Account");
+            }
+        });
+
+        // If a valid Supabase session already exists, refresh localStorage so your existing dashboards still work.
+        const { data: sessionData } = await supabase.auth.getSession();
+
+        if (sessionData?.session?.user) {
+            try {
+                const profile = await getUserProfile(sessionData.session.user);
+                if (isApprovedProfile(profile)) {
+                    await saveLocalSession(sessionData.session.user, profile);
+                } else {
+                    await supabase.auth.signOut();
+                    localStorage.removeItem("user");
+                }
+            } catch (error) {
+                console.warn("Existing session found, but profile could not be loaded:", error.message || error);
+            }
+        }
+    </script>
+</body>
+</html>
