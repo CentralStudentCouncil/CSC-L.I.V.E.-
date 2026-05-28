@@ -174,12 +174,26 @@
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    id="openAboutModal"
-                    class="shrink-0 rounded-full bg-blue-700 px-4 py-2 text-xs sm:text-sm font-black text-white shadow-md shadow-blue-900/20 hover:bg-blue-800 transition-colors">
-                    About
-                </button>
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        id="openNotificationsModal"
+                        title="Announcements"
+                        aria-label="Open announcements"
+                        class="relative shrink-0 rounded-full bg-white/90 px-3 py-2 text-lg font-black text-blue-900 shadow-md shadow-blue-900/10 hover:bg-white transition-colors">
+                        🔔
+                        <span id="studentAnnouncementCount" class="absolute -right-1 -top-1 hidden min-w-5 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-black leading-none text-white">0</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="openAboutModal"
+                        title="About L.I.V.E."
+                        aria-label="About L.I.V.E."
+                        class="shrink-0 rounded-full bg-white/90 px-3 py-2 text-lg font-black text-blue-900 shadow-md shadow-blue-900/10 hover:bg-white transition-colors">
+                        ⓘ
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -241,6 +255,50 @@
                 To see the history of the games, click the team you want.
             </p>
 
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+                <div class="mb-4">
+                    <h3 class="text-xl font-black text-slate-950">Send a Recommendation or Concern</h3>
+                    <p class="text-sm font-semibold text-slate-700">Share feedback with the CSC administrators.</p>
+                </div>
+
+                <form id="studentFeedbackForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="feedbackType" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Type</label>
+                        <select id="feedbackType" required class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                            <option value="Recommendation">Recommendation</option>
+                            <option value="Concern">Concern</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="feedbackStudentName" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Name</label>
+                        <input id="feedbackStudentName" type="text" maxlength="120" placeholder="Optional" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                    </div>
+
+                    <div>
+                        <label for="feedbackStudentId" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Student ID</label>
+                        <input id="feedbackStudentId" type="text" maxlength="80" placeholder="Optional" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                    </div>
+
+                    <div>
+                        <label for="feedbackContact" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Contact</label>
+                        <input id="feedbackContact" type="text" maxlength="120" placeholder="Optional email or messenger" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="feedbackMessage" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Message</label>
+                        <textarea id="feedbackMessage" required rows="4" maxlength="1200" placeholder="Write your recommendation or concern..." class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"></textarea>
+                    </div>
+
+                    <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <p id="studentFeedbackStatus" class="text-sm font-bold text-slate-700"></p>
+                        <button type="submit" id="submitStudentFeedback" class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-black text-white shadow-md shadow-blue-900/20 hover:bg-blue-800 transition-colors">
+                            Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="stats-card card-hover p-6 bg-white rounded-2xl border border-slate-200 relative overflow-hidden group">
@@ -277,49 +335,6 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
-                <div class="mb-4">
-                    <h3 class="text-xl font-black text-slate-950">Send a Commendation or Concern</h3>
-                    <p class="text-sm font-semibold text-slate-700">Share feedback with the CSC administrators.</p>
-                </div>
-
-                <form id="studentFeedbackForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="feedbackType" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Type</label>
-                        <select id="feedbackType" required class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                            <option value="Commendation">Commendation</option>
-                            <option value="Concern">Concern</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="feedbackStudentName" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Name</label>
-                        <input id="feedbackStudentName" type="text" maxlength="120" placeholder="Optional" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                    </div>
-
-                    <div>
-                        <label for="feedbackStudentId" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Student ID</label>
-                        <input id="feedbackStudentId" type="text" maxlength="80" placeholder="Optional" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                    </div>
-
-                    <div>
-                        <label for="feedbackContact" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Contact</label>
-                        <input id="feedbackContact" type="text" maxlength="120" placeholder="Optional email or messenger" class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="feedbackMessage" class="block text-xs font-black uppercase tracking-widest text-slate-600 mb-1">Message</label>
-                        <textarea id="feedbackMessage" required rows="4" maxlength="1200" placeholder="Write your commendation or concern..." class="w-full rounded-xl border border-slate-300 bg-white/80 px-3 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"></textarea>
-                    </div>
-
-                    <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <p id="studentFeedbackStatus" class="text-sm font-bold text-slate-700"></p>
-                        <button type="submit" id="submitStudentFeedback" class="rounded-xl bg-blue-700 px-5 py-2.5 text-sm font-black text-white shadow-md shadow-blue-900/20 hover:bg-blue-800 transition-colors">
-                            Submit Feedback
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
 
         <!-- Game Schedule & Status Tab -->
@@ -422,6 +437,30 @@
                 <p id="studentAnnouncementDate" class="mb-2 text-xs font-black uppercase tracking-widest text-blue-700"></p>
                 <h3 id="studentAnnouncementTitle" class="text-2xl font-black text-slate-950"></h3>
                 <p id="studentAnnouncementMessage" class="mt-4 whitespace-pre-wrap text-sm sm:text-base font-semibold leading-relaxed text-slate-800"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Announcements Modal -->
+    <div
+        id="studentNotificationsModal"
+        class="dashboard-modal-overlay fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[1000] p-4 transition-all duration-300">
+
+        <div class="dashboard-modal-panel bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-r from-blue-800 to-blue-900 p-6 flex items-center justify-between">
+                <h2 class="text-xl font-bold text-white tracking-tight">Announcements</h2>
+                <button
+                    type="button"
+                    id="closeStudentNotificationsModal"
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors text-2xl leading-none">
+                    ×
+                </button>
+            </div>
+
+            <div id="studentNotificationsList" class="p-6 sm:p-8 overflow-y-auto max-h-[75vh] space-y-4">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm font-bold text-slate-500">
+                    Loading announcements...
+                </div>
             </div>
         </div>
     </div>
@@ -535,6 +574,11 @@
             const studentAnnouncementDate = document.getElementById("studentAnnouncementDate");
             const studentAnnouncementTitle = document.getElementById("studentAnnouncementTitle");
             const studentAnnouncementMessage = document.getElementById("studentAnnouncementMessage");
+            const openNotificationsModalButton = document.getElementById("openNotificationsModal");
+            const studentAnnouncementCount = document.getElementById("studentAnnouncementCount");
+            const studentNotificationsModal = document.getElementById("studentNotificationsModal");
+            const closeStudentNotificationsModal = document.getElementById("closeStudentNotificationsModal");
+            const studentNotificationsList = document.getElementById("studentNotificationsList");
 
             const studentMatchesGrid = document.getElementById("studentMatchesGrid");
             const gameCategoryFilter = document.getElementById("gameCategoryFilter");
@@ -556,7 +600,10 @@
             let lastLeaderboardHistoryRows = [];
             let lastLeaderboardSignature = "";
             let lastMatchesSignature = "";
-            let lastShownAnnouncementId = null;
+            let lastShownAnnouncementKey = null;
+            let studentAnnouncementsData = [];
+            let isRefreshingStudentAnnouncements = false;
+            const STUDENT_SEEN_ANNOUNCEMENTS_KEY = "studentSeenAnnouncementIds";
 
             function escapeHTML(value) {
                 return String(value ?? "")
@@ -625,15 +672,28 @@
                 }
 
                 studentFeedbackForm.reset();
-                feedbackType.value = "Commendation";
+                feedbackType.value = "Recommendation";
                 studentFeedbackStatus.textContent = "Thank you. Your feedback was sent to the admin.";
                 studentFeedbackStatus.className = "text-sm font-bold text-emerald-700";
             }
 
-            function openStudentAnnouncement(announcement) {
-                if (!announcement || Number(announcement.id) === Number(lastShownAnnouncementId)) return;
+            function getAnnouncementSeenKey(announcement) {
+                return [
+                    announcement?.id,
+                    announcement?.updated_at || announcement?.created_at || "",
+                    announcement?.title || "",
+                    announcement?.message || "",
+                    announcement?.audience || "",
+                    announcement?.is_active ? "active" : "hidden"
+                ].map(value => String(value ?? "")).join("|");
+            }
 
-                lastShownAnnouncementId = announcement.id;
+            function openStudentAnnouncement(announcement) {
+                const announcementKey = getAnnouncementSeenKey(announcement);
+
+                if (!announcement || announcementKey === lastShownAnnouncementKey) return;
+
+                lastShownAnnouncementKey = announcementKey;
                 studentAnnouncementDate.textContent = formatDateTime(announcement.created_at);
                 studentAnnouncementTitle.textContent = announcement.title || "Announcement";
                 studentAnnouncementMessage.textContent = announcement.message || "";
@@ -644,6 +704,110 @@
             function closeAnnouncementModal() {
                 studentAnnouncementModal.classList.add("hidden");
                 studentAnnouncementModal.classList.remove("flex");
+            }
+
+            function getSeenAnnouncementKeys() {
+                try {
+                    const parsed = JSON.parse(localStorage.getItem(STUDENT_SEEN_ANNOUNCEMENTS_KEY) || "[]");
+                    return Array.isArray(parsed) ? parsed.map(key => String(key)) : [];
+                } catch (error) {
+                    return [];
+                }
+            }
+
+            function saveSeenAnnouncementKeys(keys) {
+                localStorage.setItem(STUDENT_SEEN_ANNOUNCEMENTS_KEY, JSON.stringify([...new Set(keys.map(key => String(key)))]));
+            }
+
+            function updateAnnouncementBadge() {
+                if (!studentAnnouncementCount) return;
+
+                const seenKeys = new Set(getSeenAnnouncementKeys());
+                const newCount = studentAnnouncementsData.filter(item => !seenKeys.has(getAnnouncementSeenKey(item))).length;
+
+                studentAnnouncementCount.textContent = String(newCount);
+                studentAnnouncementCount.classList.toggle("hidden", newCount === 0);
+            }
+
+            function markCurrentAnnouncementsSeen() {
+                saveSeenAnnouncementKeys([
+                    ...getSeenAnnouncementKeys(),
+                    ...studentAnnouncementsData.map(item => getAnnouncementSeenKey(item))
+                ]);
+                updateAnnouncementBadge();
+            }
+
+            function isNotificationsModalOpen() {
+                return studentNotificationsModal && !studentNotificationsModal.classList.contains("hidden");
+            }
+
+            function openNotificationsModal() {
+                renderStudentNotifications();
+                markCurrentAnnouncementsSeen();
+                studentNotificationsModal.classList.remove("hidden");
+                studentNotificationsModal.classList.add("flex");
+            }
+
+            function closeNotificationsModal() {
+                studentNotificationsModal.classList.add("hidden");
+                studentNotificationsModal.classList.remove("flex");
+            }
+
+            function renderStudentNotifications() {
+                if (!studentNotificationsList) return;
+
+                if (studentAnnouncementsData.length === 0) {
+                    studentNotificationsList.innerHTML = `
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm font-bold text-slate-500">
+                            No announcements available.
+                        </div>
+                    `;
+                    return;
+                }
+
+                studentNotificationsList.innerHTML = studentAnnouncementsData.map(item => `
+                    <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <p class="mb-2 text-xs font-black uppercase tracking-widest text-blue-700">${formatDateTime(item.created_at)}</p>
+                        <h3 class="text-lg font-black text-slate-950">${escapeHTML(item.title || "Announcement")}</h3>
+                        <p class="mt-3 whitespace-pre-wrap text-sm font-semibold leading-relaxed text-slate-700">${escapeHTML(item.message || "")}</p>
+                    </article>
+                `).join("");
+            }
+
+            async function loadStudentAnnouncements() {
+                const { data, error } = await supabase
+                    .from(ANNOUNCEMENTS_TABLE)
+                    .select("*")
+                    .eq("is_active", true)
+                    .in("audience", ["all", "students"])
+                    .order("created_at", { ascending: false });
+
+                if (error) {
+                    console.error("Student announcements list load error:", error.message || error);
+                    return;
+                }
+
+                studentAnnouncementsData = data || [];
+
+                updateAnnouncementBadge();
+                renderStudentNotifications();
+            }
+
+            async function refreshStudentAnnouncements({ showPopup = false } = {}) {
+                if (isRefreshingStudentAnnouncements) return;
+
+                isRefreshingStudentAnnouncements = true;
+
+                try {
+                    await loadStudentAnnouncements();
+                    await loadLatestAnnouncement({ showPopup });
+
+                    if (isNotificationsModalOpen()) {
+                        renderStudentNotifications();
+                    }
+                } finally {
+                    isRefreshingStudentAnnouncements = false;
+                }
             }
 
             async function loadLatestAnnouncement({ showPopup = true } = {}) {
@@ -1567,6 +1731,9 @@
             openAboutModalButton.addEventListener("click", openAboutModal);
             closeAboutModalButton.addEventListener("click", closeAboutModal);
             aboutModal.addEventListener("click", (e) => { if (e.target === aboutModal) closeAboutModal(); });
+            openNotificationsModalButton.addEventListener("click", openNotificationsModal);
+            closeStudentNotificationsModal.addEventListener("click", closeNotificationsModal);
+            studentNotificationsModal.addEventListener("click", (e) => { if (e.target === studentNotificationsModal) closeNotificationsModal(); });
             studentFeedbackForm.addEventListener("submit", submitFeedback);
             closeStudentAnnouncementModal.addEventListener("click", closeAnnouncementModal);
             studentAnnouncementModal.addEventListener("click", (e) => { if (e.target === studentAnnouncementModal) closeAnnouncementModal(); });
@@ -1576,19 +1743,21 @@
                 loadLeaderboard({ showLoading: true }),
                 loadSportCategoryFilterOptions(),
                 loadMatches({ showLoading: true }),
-                loadLatestAnnouncement({ showPopup: true })
+                refreshStudentAnnouncements({ showPopup: true })
             ]);
 
             setInterval(updateCountdownDisplays, 1000);
             setInterval(() => {
                 scheduleLiveMatchReload(0);
                 scheduleLiveLeaderboardReload(0);
+                refreshStudentAnnouncements({ showPopup: false });
             }, 15000);
 
             document.addEventListener("visibilitychange", function () {
                 if (!document.hidden) {
                     scheduleLiveMatchReload(0);
                     scheduleLiveLeaderboardReload(0);
+                    refreshStudentAnnouncements({ showPopup: false });
                 }
             });
 
@@ -1613,7 +1782,7 @@
                     scheduleLiveMatchReload(150);
                 })
                 .on("postgres_changes", { event: "*", schema: "public", table: ANNOUNCEMENTS_TABLE }, () => {
-                    loadLatestAnnouncement({ showPopup: true });
+                    refreshStudentAnnouncements({ showPopup: true });
                 })
                 .subscribe((status) => {
                     if (status === "SUBSCRIBED") {
